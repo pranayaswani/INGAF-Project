@@ -1,0 +1,8 @@
+- logo in menu 
+- about us 
+- save reset icons in all components 
+- office universe and client registration - validate login id while saving 
+
+
+
+

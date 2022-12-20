@@ -1,0 +1,58 @@
+import React, {useState} from "react";
+import {useForm} from 'react-hook-form';
+import "./ClientOfficeRegistration.css";
+
+const Clients = () => {
+//   const {register, handleSubmit, errors} = useForm();
+//   const [userInfo, setUserInfo] = useState();
+
+  
+//   const [state, setState]=useState(initialState);
+  
+
+
+//   const onSubmit = (data) =>{
+//     setUserInfo(data);
+//     console.log(data);
+
+//   };
+  
+
+  return (
+    <div className="card">
+      <div className="row col-md-8 ">
+        <div className="panel panel-primary mt-3">
+          <div  className="panel-heading text-center panel-relative mt-2">
+            <h3>Client Office Registration</h3>
+          </div>
+          <div className="panel-body jumbotron">
+            <form >
+              <div className="input-group">
+                <label htmlFor="office_name">Office Name</label>                
+                <input type="text" autoComplete="off" name="office_name"  className="form-control" />
+                <p className="error-msg"><small></small></p>
+              </div>
+
+              <div className="input-group">
+                <label htmlFor="pao_code">PAO Code (if any)</label>                
+                <input type="text" className="form-control" autoComplete="off" name="pao_code" />
+                <p className="error-msg"><small></small></p>                
+              </div>
+
+              <div className="input-group">
+                <label htmlFor="email_id">E-Mail ID</label>                
+                <input type="text" className="form-control" autoComplete="off" name="email_id" />
+                <p className="error-msg"><small></small></p>                
+              </div>
+              <br />
+              <button type="submit" className="btn btn-primary">Submit</button>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Clients;

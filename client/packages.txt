@@ -1,0 +1,4 @@
+npm i react-bootstrap-table-next --save --legacy-peer-deps
+npm i react-bootstrap-table2-editor --save --legacy-peer-deps
+npm i react-bootstrap-table2-filter --save --legacy-peer-deps
+npm i bootstrap@5.2.3
