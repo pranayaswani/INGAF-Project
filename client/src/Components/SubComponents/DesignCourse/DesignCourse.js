@@ -17,8 +17,12 @@ const initialValues = {
     date_upto:"",      
     last_date:"",          
     course_fee:0,     
-    status_id:"0",       
+    course_director_id:"0",       
+    course_coordinator_id:"0",           
+    status_id:"3",           
   }
+
+  
 
 
 const PrepareCalendar = () => {
@@ -26,13 +30,14 @@ const PrepareCalendar = () => {
     const [ttSubData, setTTSubData] = useState([]);    
     const [mainTopicsData, setMainTopicsData] = useState([]);    
     const [subTopicsData, setSubTopicsData] = useState([]);        
-    const [statusData, setStatusData] = useState([]);            
+    const [directorData, setDirectorData] = useState([]);            
+    const [coordinatorData, setCoordinatorData] = useState([]);                
     const [state, setState]=useState(initialValues);
     const [formErrors, setFormErrors]=useState({});
     const [isSubmit, setIsSubmit]=useState(false);
     const [oldStatus, setOldStatus]=useState("");
-
-    const {tc_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,status_id} = state;
+    
+    const {tc_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id,status_id} = state;
 
     const {action, id} = useParams();
 
@@ -71,14 +76,16 @@ useEffect(() => {
     .catch((err) => {
       console.log(err);
     });
-    axios.get("http://localhost:5000/get/current_status")
+    axios.get("http://localhost:5000/get/office_universe")
     .then((response) => {
-      setStatusData(response.data);
+      setDirectorData(response.data);
+      setCoordinatorData(response.data);      
     })
     .catch((err) => {
       console.log(err);
     });
 }, []);
+
 
 const resetForm = () =>{
     setState(initialValues);
@@ -101,9 +108,9 @@ useEffect(()=>{
     console.log(formErrors);
     // if(Object.keys(formErrors).length===0 && isSubmit)
     // {
-        const {tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,status_id} = state;
+        const {tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id,status_id} = state;
                 axios.post("http://localhost:5000/post/courses",
-                {tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,status_id})
+                {tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id,status_id})
                 .then((res)=>
                 {
                     if(res.status==200)
@@ -219,21 +226,34 @@ const validate = (values) => {
             </div>
 
           </div>
+          <div className="two fields">
+    
           <div className="field">
-            <label>Current Status</label>
-              <select className="ui fluid dropdown" name="status_id" value={state.status_id} onChange={handleChange} readOnly={action}>
-                <option value="0">---Select Current Status---</option>
-                {statusData.map((st) => (
-                  <option value={st.id}>{st.descr}</option>
+            <label>Course Director</label>
+              <select className="ui fluid dropdown" name="course_director_id" value={state.course_director_id} onChange={handleChange} readOnly={action}>
+                <option value="0">---Select Course Director---</option>
+                {directorData.map((cd) => (
+                  <option value={cd.id}>{cd.emp_name}</option>
                 ))}
                 ;
               </select>
             </div>
+            <div>
+            <label>Course Coordinator</label>
+              <select className="ui fluid dropdown" name="course_coordinator_id" value={state.course_coordinator_id} onChange={handleChange} readOnly={action}>
+                <option value="0">---Select Course Coordinator---</option>
+                {coordinatorData.map((cc) => (
+                  <option value={cc.id}>{cc.emp_name}</option>
+                ))}
+                ;
+              </select>
+            </div>
+        </div>
 
 
           <button className="ui button primary w-20" hidden={action? "hidden" : ""}>{id? "Update" : "Save"}</button>
             &nbsp;&nbsp;&nbsp;&nbsp;<button className="ui button red w-20" hidden={action? "hidden" : ""} disabled={id} onClick={resetForm}>Reset</button>
-          <Link to ="#">
+          <Link to ="/CourseList">
           <button className="btn btn-success pull-right"><span className="glyphicon glyphicon-triangle-left"></span>&nbsp;&nbsp;Go Back</button>                              
           </Link>          
 

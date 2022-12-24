@@ -30,6 +30,9 @@ import Designations from './Components/Masters/Designations/Designations';
 import OfficeUniverseList from './Components/Masters/OfficeUniverse/OfficeUniverseList';
 import OfficeUniverse from './Components/Masters/OfficeUniverse/OfficeUniverse';
 
+import FacultiesList from './Components/Masters/Faculties/FacultiesList';
+import Faculties from './Components/Masters/Faculties/Faculties';
+
 
 import ControllersList from './Components/Masters/Controllers/ControllersList';
 import Controllers from './Components/Masters/Controllers/Controllers';
@@ -49,6 +52,9 @@ import Services from "./Components/Services";
 import FormMultiFields from "./FormMultiFields";
 
 import DesignCourse from "./Components/SubComponents/DesignCourse/DesignCourse.js"
+import CourseList from "./Components/SubComponents/DesignCourse/CourseList.js"
+import SessionWisePlan from "./Components/SubComponents/DesignCourse/SessionWisePlan.js"
+
 // import PrepareCalendar from "./Components/SubComponents/PrepareCalendar.js"
 // import GudduList from "./Components/Masters/UserRoles/GudduList";
 // import GudduAdd from "./Components/Masters/UserRoles/GudduAdd";
@@ -83,7 +89,8 @@ function App() {
         <Route path="/TrainingCentresList" element={<TrainingCentresList/>}/>     
 
         <Route path="/DesignCourse" element={<DesignCourse/>}/>        
-
+        <Route path="/CourseList" element={<CourseList/>}/>     
+        <Route path="/SessionWisePlan" element={<SessionWisePlan/>}/>             
 
         <Route path="/TrainingTypesMain" element={<TrainingTypesMain/>}/>        
         <Route path="/TrainingTypesMain/:id" element={<TrainingTypesMain/>}/>                        
@@ -125,6 +132,10 @@ function App() {
         <Route path="/OfficeUniverse/:action/:id" element={<OfficeUniverse/>}/>                                
         <Route path="/OfficeUniverseList" element={<OfficeUniverseList/>}/>     
 
+        <Route path="/Faculties" element={<Faculties/>}/>        
+        <Route path="/Faculties/:id" element={<Faculties/>}/>                        
+        <Route path="/Faculties/:action/:id" element={<Faculties/>}/>                                
+        <Route path="/FacultiesList" element={<FacultiesList/>}/>     
 
         <Route path="/ExpenditureHeads" element={<ExpenditureHeads/>}/>        
         <Route path="/ExpenditureHeads/:id" element={<ExpenditureHeads/>}/>                        

@@ -14,7 +14,8 @@ const Menu = () => {
                 <div className="sub-menu-1">
                     <ul>
                     <li ><a href="/TrainingCentresList">Training Centres</a></li>      
-                    <li ><a href="/DesignCourse">Design Course</a></li>                                              
+                    <li ><a href="/CourseList">Design Course</a></li>                                              
+                    <li ><a href="/SessionWisePlan">Session Wise Plan</a></li>                                                                  
                     <li className="hover-me"><a href="/TrainingTypesMain">Training Types</a><i className="fa fa-angle-right"></i>
                     <div className="sub-menu-2">
                             <ul>
@@ -37,9 +38,11 @@ const Menu = () => {
                     <li ><a href="/StatesList">States</a></li>                                   
                     <li ><a href="/CitiesList">Cities</a></li>      
                     <li ><a href="/UserRolesList">User Roles</a></li> 
+                    <li ><a href="/FacultiesList">Faculties</a></li>                     
                     <li ><a href="/ControllersList">Controllers</a></li>                     
                     <li ><a href="/ExpenditureHeadsList">Expenditure Heads</a></li>                                            
                     <li ><a href="/OfficeUniverseList"><i className="fa fa-users"></i>Office Universe</a></li>                                            
+                    <li ><a href="/SignatoriesList"><i className="fa fa-users"></i>Signatories</a></li>                                                                
                     <li className="hover-me"><a href="#">More Masters</a> <i className="fa fa-angle-right"></i>
                         <div className="sub-menu-2">
                             <ul>

@@ -540,6 +540,16 @@ app.get(`/get/${apiRoute4}`,(req,res)=>{
     });
 });
 
+app.get(`/get/${apiRoute4}/:mainTopic`,(req,res)=>{
+    const {mainTopic} = req.params;
+    db.query("select id, descr from " + tblName4 + " where main_id = "+ mainTopic + " order by descr",(err,result)=>{
+        if(err) throw err;
+        console.log(result);
+        res.send(result);
+    });
+});
+
+
 app.post(`/post/${apiRoute4}`, (req, res)=>{
     const {descr, main_id, status_id} = req.body;
     const sqlInsert = "insert into " + tblName4 + " (descr, main_id, status_id) values (?, ?, ?)";
@@ -831,21 +841,20 @@ app.put(`/updateStatus/${apiRoute}/:id`,(req,res)=>{
 
 
 //  ---- APIs Office Universe starts here ------------------------------------------------------
-apiRoute="office_universe"
-const tblName2 ="mst_office_universe";
+const apiRouteOU="office_universe"
+const tblNameOU ="mst_office_universe";
 
-app.get(`/get/office_universe`,(req,res)=>{
-    db.query("select a.id, a.emp_name, b.descr as designation, a.phone_nos,a.mobile_no,a.email_id, c.descr as user_role,d.descr as tc, a.login_id, a.is_approved, e.descr as sts from mst_office_universe a, mst_designations b, mst_user_roles c, mst_training_centres d, mst_current_status e where a.desig_id = b.id and a.user_role_id = c.id and a.tc_id = d.id and a.status_id = e.id order by a.emp_name",(err,result)=>{
+app.get(`/get/${apiRouteOU}`,(req,res)=>{
+    db.query("select a.id, a.emp_name, b.descr as designation, a.phone_nos,a.mobile_no,a.email_id, c.descr as user_role,d.descr as tc, a.login_id, a.is_approved, e.descr as sts from " + tblNameOU + " a, mst_designations b, mst_user_roles c, mst_training_centres d, mst_current_status e where a.desig_id = b.id and a.user_role_id = c.id and a.tc_id = d.id and a.status_id = e.id order by a.emp_name",(err,result)=>{
         if(err) throw err;
         // console.log(result);
         res.send(result);
     });
 });
 
-app.post(`/post/office_universe`, (req, res)=>{
-    console.log("Table:"+tblName2);
+app.post(`/post/${apiRouteOU}`, (req, res)=>{
     const {tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id} = req.body;
-    const sqlInsert = "insert into " + tblName2 + " (tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id) values (?, ?, ?, ?,?, ?, ?, ?, ?)";
+    const sqlInsert = "insert into " + tblNameOU + " (tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id) values (?, ?, ?, ?,?, ?, ?, ?, ?)";
     db.query(sqlInsert, [tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id], (error, result)=>{
         if(error){console.log(error)}
         if(result){res.send(result)}
@@ -853,9 +862,9 @@ app.post(`/post/office_universe`, (req, res)=>{
 });
 
 
-app.get(`/get/office_universe_check/:emp_name/:id`,(req,res)=>{
+app.get(`/get/${apiRouteOU}_check/:emp_name/:id`,(req,res)=>{
     const {emp_name, id} = req.params
-    const sqlCmd = "select id from mst_office_universe where emp_name = ? and id != ?"
+    const sqlCmd = "select id from " + tblNameOU + " where emp_name = ? and id != ?"
     db.query(sqlCmd, [emp_name, id],(err,result)=>{
         if(err) throw err;
         res.send(result);
@@ -863,18 +872,18 @@ app.get(`/get/office_universe_check/:emp_name/:id`,(req,res)=>{
 });
 
 
-app.delete(`/delete/${apiRoute}/:id`,(req,res)=>{
+app.delete(`/delete/${apiRouteOU}/:id`,(req,res)=>{
     const {id} = req.params;
-    const sqlCmd = "delete from " + tblName2 + " where id = "+id;
+    const sqlCmd = "delete from " + tblNameOU + " where id = "+id;
     db.query(sqlCmd, (error, result)=>{
         if(error){return error}
         if(result){return result}    
     });
 });
 
-app.get(`/getById/office_universe/:id`,(req,res)=>{
+app.get(`/getById/${apiRouteOU}/:id`,(req,res)=>{
     const {id} = req.params;
-    const sqlCmd = "select id, tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id from mst_office_universe where id=?";
+    const sqlCmd = "select id, tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id from " + tblNameOU + " where id=?";
     console.log("tbl:"+tblName2)
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
@@ -883,12 +892,12 @@ app.get(`/getById/office_universe/:id`,(req,res)=>{
     });
 });
 
-app.put(`/update/office_universe/:id`,(req,res)=>{
+app.put(`/update/${apiRouteOU}/:id`,(req,res)=>{
     const {id} = req.params;
     console.log(" ID :"+id )
     console.log(req.body);
     const {tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id} = req.body;
-    const sqlCmd = "update mst_office_universe set emp_name = ?, desig_id = ?,phone_nos = ?,mobile_no = ?,email_id = ?,user_role_id = ?, login_id = ?, status_id = ? where id = ?";
+    const sqlCmd = "update " + tblNameOU + " set emp_name = ?, desig_id = ?,phone_nos = ?,mobile_no = ?,email_id = ?,user_role_id = ?, login_id = ?, status_id = ? where id = ?";
     db.query(sqlCmd, [emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id, id], (error, result)=>{
         if(error){res.send(error)}
         if(result){ console.log(result);
@@ -896,15 +905,92 @@ app.put(`/update/office_universe/:id`,(req,res)=>{
     }); 
 });
 
-app.put(`/updateStatus/${apiRoute}/:id`,(req,res)=>{
+app.put(`/updateStatus/${apiRouteOU}/:id`,(req,res)=>{
     const {id} = req.params;
     const {status_id} = req.body;
-    const sqlCmd = "update " + tblName2 + " set status_id = ? where id = ?";
+    const sqlCmd = "update " + tblNameOU + " set status_id = ? where id = ?";
     db.query(sqlCmd, [status_id, id], (error, result)=>{
         if(error){res.send(error)}
         if(result){res.send(result)}
     }); 
 });
+
+//------------- API Faculties --------------------------- 
+const apiRouteF="faculties"
+const tblNameF ="mst_faculties";
+
+app.get(`/get/${apiRouteF}`,(req,res)=>{
+    db.query("select a.id, a.faculty_name,a.office_name, b.descr as designation, a.phone_nos,a.mobile_no,a.email_id,d.descr as tc, a.is_approved, e.descr as sts from " + tblNameF + " a, mst_designations b, mst_training_centres d, mst_current_status e where a.desig_id = b.id and a.tc_id = d.id and a.status_id = e.id order by a.faculty_name",(err,result)=>{
+        if(err) throw err;
+        // console.log(result);
+        res.send(result);
+    });
+});
+
+app.post(`/post/${apiRouteF}`, (req, res)=>{
+    const {tc_id, faculty_name, office_name, desig_id, phone_nos, mobile_no, email_id, status_id} = req.body;
+    const sqlInsert = "insert into " + tblNameF + " (tc_id, faculty_name, office_name, desig_id, phone_nos, mobile_no, email_id, status_id) values (?,?,?,?,?, ?, ?, ?)";
+    db.query(sqlInsert, [tc_id, faculty_name, office_name, desig_id, phone_nos, mobile_no, email_id, status_id], (error, result)=>{
+        if(error){console.log(error)}
+        if(result){res.send(result)}
+    });
+});
+
+
+app.get(`/get/${apiRouteF}_check/:faculty_name/:id`,(req,res)=>{
+    const {faculty_name, id} = req.params
+    const sqlCmd = "select id from " + tblNameF + " where faculty_name = ? and id != ?"
+    db.query(sqlCmd, [faculty_name, id],(err,result)=>{
+        if(err) throw err;
+        res.send(result);
+    });
+});
+
+
+app.delete(`/delete/${apiRouteF}/:id`,(req,res)=>{
+    const {id} = req.params;
+    const sqlCmd = "delete from " + tblNameF + " where id = "+id;
+    db.query(sqlCmd, (error, result)=>{
+        if(error){return error}
+        if(result){return result}    
+    });
+});
+
+app.get(`/getById/${apiRouteF}/:id`,(req,res)=>{
+    const {id} = req.params;
+    const sqlCmd = "select id, tc_id, faculty_name, office_name, desig_id, phone_nos, mobile_no, email_id, status_id from " + tblNameF + " where id=?";
+    console.log("tbl:"+tblName2)
+    db.query(sqlCmd, id, (error, result)=>{
+        if(error) throw error;
+        // console.log(result);
+        res.send(result);
+    });
+});
+
+app.put(`/update/${apiRouteF}/:id`,(req,res)=>{
+    const {id} = req.params;
+    console.log(" ID :"+id )
+    console.log(req.body);
+    const {tc_id, faculty_name, office_name, desig_id, phone_nos, mobile_no, email_id, status_id} = req.body;
+    const sqlCmd = "update " + tblNameF + " set faculty_name = ?,office_name = ?, desig_id = ?,phone_nos = ?,mobile_no = ?,email_id = ?, status_id = ? where id = ?";
+    db.query(sqlCmd, [faculty_name,office_name, desig_id, phone_nos, mobile_no,email_id, status_id, id], (error, result)=>{
+        if(error){res.send(error)}
+        if(result){ console.log(result);
+            res.send(result)}
+    }); 
+});
+
+app.put(`/updateStatus/${apiRouteF}/:id`,(req,res)=>{
+    const {id} = req.params;
+    const {status_id} = req.body;
+    const sqlCmd = "update " + tblNameF + " set status_id = ? where id = ?";
+    db.query(sqlCmd, [status_id, id], (error, result)=>{
+        if(error){res.send(error)}
+        if(result){res.send(result)}
+    }); 
+});
+
+
 
 
 //  ---- APIs Office Universe starts here ------------------------------------------------------
@@ -982,22 +1068,153 @@ app.put(`/updateStatus/clients/:id`,(req,res)=>{
     }); 
 });
 
+//  ---- APIs Office Universe starts here ------------------------------------------------------
+apiRoute="office_universe"
+const tblName2 ="mst_office_universe";
 
-//--------------- remaining APIs --------------------
+app.get(`/get/office_universe`,(req,res)=>{
+    db.query("select a.id, a.emp_name, b.descr as designation, a.phone_nos,a.mobile_no,a.email_id, c.descr as user_role,d.descr as tc, a.login_id, a.is_approved, e.descr as sts from mst_office_universe a, mst_designations b, mst_user_roles c, mst_training_centres d, mst_current_status e where a.desig_id = b.id and a.user_role_id = c.id and a.tc_id = d.id and a.status_id = e.id order by a.emp_name",(err,result)=>{
+        if(err) throw err;
+        // console.log(result);
+        res.send(result);
+    });
+});
 
-app.post('/post/courses', (req, res)=>{
-    const {tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,status_id} = req.body;
-    const sqlInsert = "insert into trn_courses (tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,status_id) values (?, ?, ?, ?,?, ?, ?, ?, ?, ?)";
-     db.query(sqlInsert, [tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee, status_id], (error, result)=>{
-        // db.query(sqlInsert, [3,5,2,2,1,'2022-12-25','2022-12-25','2022-12-25',1,1], (error, result)=>{
+app.post(`/post/office_universe`, (req, res)=>{
+    console.log("Table:"+tblName2);
+    const {tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id} = req.body;
+    const sqlInsert = "insert into " + tblName2 + " (tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id) values (?, ?, ?, ?,?, ?, ?, ?, ?)";
+    db.query(sqlInsert, [tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id], (error, result)=>{
         if(error){console.log(error)}
         if(result){res.send(result)}
     });
 });
 
 
+app.get(`/get/office_universe_check/:emp_name/:id`,(req,res)=>{
+    const {emp_name, id} = req.params
+    const sqlCmd = "select id from mst_office_universe where emp_name = ? and id != ?"
+    db.query(sqlCmd, [emp_name, id],(err,result)=>{
+        if(err) throw err;
+        res.send(result);
+    });
+});
+
+
+app.delete(`/delete/${apiRoute}/:id`,(req,res)=>{
+    const {id} = req.params;
+    const sqlCmd = "delete from " + tblName2 + " where id = "+id;
+    db.query(sqlCmd, (error, result)=>{
+        if(error){return error}
+        if(result){return result}    
+    });
+});
+
+app.get(`/getById/office_universe/:id`,(req,res)=>{
+    const {id} = req.params;
+    const sqlCmd = "select id, tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id from mst_office_universe where id=?";
+    console.log("tbl:"+tblName2)
+    db.query(sqlCmd, id, (error, result)=>{
+        if(error) throw error;
+        // console.log(result);
+        res.send(result);
+    });
+});
+
+app.put(`/update/office_universe/:id`,(req,res)=>{
+    const {id} = req.params;
+    console.log(" ID :"+id )
+    console.log(req.body);
+    const {tc_id, emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id} = req.body;
+    const sqlCmd = "update mst_office_universe set emp_name = ?, desig_id = ?,phone_nos = ?,mobile_no = ?,email_id = ?,user_role_id = ?, login_id = ?, status_id = ? where id = ?";
+    db.query(sqlCmd, [emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id, id], (error, result)=>{
+        if(error){res.send(error)}
+        if(result){ console.log(result);
+            res.send(result)}
+    }); 
+});
+
+app.put(`/updateStatus/${apiRoute}/:id`,(req,res)=>{
+    const {id} = req.params;
+    const {status_id} = req.body;
+    const sqlCmd = "update " + tblName2 + " set status_id = ? where id = ?";
+    db.query(sqlCmd, [status_id, id], (error, result)=>{
+        if(error){res.send(error)}
+        if(result){res.send(result)}
+    }); 
+});
+
+
+
+//--------------- Courses APIs --------------------
+
+app.post('/post/courses', (req, res)=>{
+    const {tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id,status_id} = req.body;
+    const sqlInsert = "insert into trn_courses (tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id,status_id) values (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)";
+     db.query(sqlInsert, [tc_id,tt_main_id,tt_sub_id,main_topic_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id, status_id], (error, result)=>{
+        // db.query(sqlInsert, [3,5,2,2,1,'2022-12-25','2022-12-25','2022-12-25',1,1], (error, result)=>{
+        if(error){console.log(error)}
+        if(result){res.send(result)}
+    });
+});
+
+app.get('/get/courses',(req,res)=>{
+    db.query("select a.id, b.descr as training_type, c.descr as main_topic, date_from, date_upto, mode_of_training, a.is_approved, d.descr as sts from trn_courses a, mst_training_types_sub b, mst_topics_main c, mst_current_status d where a.tt_sub_id = b.id and a.main_topic_id = c.id and a.status_id = d.id  order by main_topic",(err,result)=>{
+        if(err) throw err;
+        // console.log(result);
+        res.send(result);
+    });
+});
+
+
+app.delete('/delete/courses/:id',(req,res)=>{
+    const {id} = req.params;
+    const sqlCmd = "delete from trn_courses where id = "+id;
+    db.query(sqlCmd, (error, result)=>{
+        if(error){return error}
+        if(result){return result}    
+    });
+});
+
+app.get('/get/courses/:tt_sub_id',(req,res)=>{
+    const {tt_sub_id} = req.params;
+    const sqlCmd = "select a.id as course_id, b.descr as topic, b.id as topic_id, date_from, date_upto from trn_courses a, mst_topics_main b where a.main_topic_id = b.id and tt_sub_id  = "+tt_sub_id;
+    db.query(sqlCmd, (err, result)=>{
+        if(err) throw err;
+        else {
+    // console.log(result);
+    res.send(result);}
+    })    
+});
+
+app.get('/get/courses1/:tt_sub_id/:main_topic_id',(req,res)=>{
+    const {tt_sub_id, main_topic_id} = req.params;
+    const sqlCmd = "select a.id, date_from, date_upto from trn_courses a, mst_topics_main b where a.main_topic_id = b.id and tt_sub_id  = ? and main_topic_id = ?";
+    db.query(sqlCmd,[tt_sub_id, main_topic_id], (err, result)=>{
+        if(err) throw err;
+
+    // console.log(result);
+    res.send(result);
+    })    
+});
+
+app.get('/get/courses2/:course_id',(req,res)=>{
+   
+    const {course_id} = req.params;
+    const sqlCmd = "select id, date_from, date_upto, main_topic_id from  trn_courses where id = ?";
+    db.query(sqlCmd,[course_id], (err, result)=>{
+//        if(err) throw err;
+    if(err) console.log(err);
+    console.log("API Result:"+result);
+    res.send(result);
+    })    
+});
+
+
+//--------------- remaining APIs --------------------
+
 app.get('/get/current_status',(req,res)=>{
-    db.query("select * from mst_current_status order by descr",(err,result)=>{
+    db.query("select * from mst_current_status where id<=2 order by descr ",(err,result)=>{
         if(err) throw err;
         console.log(result);
         res.send(result);

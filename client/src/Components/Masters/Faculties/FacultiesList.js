@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
-import DesignCourse from "./DesignCourse";
+import Faculties from "./FacultiesX";
 import {Link} from 'react-router-dom';
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import DataTable from "react-data-table-component";
 
 // react table pagination sorting filter link https://www.youtube.com/watch?v=rgY1oPNVgwU
-const CourseList = () => {
+const FacultiesList = () => {
   const [tblData, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
 
   const getData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/get/courses");
+      const response = await axios.get("http://localhost:5000/get/faculties");
       console.log(response);
       setData(response.data);
-
       setFilteredData(response.data);
     } catch (error) {
       console.log(error);
@@ -26,13 +25,13 @@ const CourseList = () => {
   const deleteRecord = (id) =>{
     if(window.confirm("Are you  Sure?"))
     {
-    axios.delete(`http://localhost:5000/delete/courses/${id}`)
+    axios.delete(`http://localhost:5000/delete/faculties/${id}`)
     toast.success("Record Deleted Successfully...")    
     setTimeout(()=> getData(),500);}
   }
   const updateRecord = (id) =>{
-    <Link to={`/DesignCourse/${id}`}></Link>
-    axios.get(`http://localhost:5000/get/courses/${id}`)
+    <Link to={`/Faculties/${id}`}></Link>
+    axios.get(`http://localhost:5000/get/faculties/${id}`)
   }
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const CourseList = () => {
 
   useEffect(() => {
     const result = tblData.filter((dt) => {
-      return dt.main_topic.toLowerCase().match(search.toLowerCase());
+      return dt.emp_name.toLowerCase().match(search.toLowerCase());
     //   toast.success("Record Deleted Successfully...");
     });
     setFilteredData(result);
@@ -51,41 +50,37 @@ const CourseList = () => {
   const action = "view";
   const columns = [
     {
-      name: 'S.No.',
+      name: 'Sl.No.',
       selector: (row, index) => index+1,
       disableSortBy: true,
-      width:"70px"
+      width:"80px"
     },
     {
-        name: <b>Training Type</b>,
-        selector: (row) => row.training_type,
+        name: <b>Faculty Name</b>,
+        selector: (row) => row.faculty_name,
         sortable: true,
-        width:"250px"                
-      },
-    {
-        name: <b>Main Topic</b>,
-        selector: (row) => row.main_topic,
-        sortable: true,
-        width:"250px"        
+        width:"200px"        
       },
       {
-        name: <b>Date From</b>,
-        selector: (row) => row.date_from,
+        name: <b>Designation</b>,
+        selector: (row) => row.designation,
         sortable: true,
-        width:"112px"
-      },
-
-      {
-        name: <b>Date Upto</b>,
-        selector: (row) => row.date_upto,
-        sortable: true,
-        width:"112px"
       },
       {
-        name: <b>Mode</b>,
-        selector: (row) => row.mode_of_training ==1 ? "Online":"Offline",
+        name: <b>E-Mail ID</b>,
+        selector: (row) => row.email_id,
         sortable: true,
-        width:'100px'
+        width:"200px"
+      },
+      {
+        name: <b>Mobile No.</b>,
+        selector: (row) => row.mobile_no,
+        sortable: true,
+      },
+      {
+        name: <b>Topics</b>,
+        selector: (row) => row.mobile_no,
+        sortable: true,
       },
 
       {
@@ -94,18 +89,19 @@ const CourseList = () => {
         sortable: true,
         width:'100px'
       },
+      
+
     {
       name: <b>Current Status</b>,
       selector: (row) => row.sts,
       sortable: true,
-      width:'100px'
     },
     {
       name: "",
       width:"70px",
       cell: (row) => (
 
-        <Link to={`/DesignCourse/${action}/${row.id}`}>
+        <Link to={`/Faculties/${action}/${row.id}`}>
           <button className="btn btn-success"  data-toggle=" tooltip" data-placement="bottom" title="View Record"><i class="fa-solid fa-eye"></i></button>                
           </Link>
         ),
@@ -114,7 +110,7 @@ const CourseList = () => {
       name: <b>Actions</b>,
       width:"70px",
       cell: (row) => (
-        <Link to={`/DesignCourse/${row.id}`}>
+        <Link to={`/Faculties/${row.id}`}>
           <button className="btn btn-primary"  data-toggle=" tooltip" data-placement="bottom" title="Update Record"><i class="fa-solid fa-pencil"></i></button>                
           </Link>
         ),
@@ -133,7 +129,7 @@ const CourseList = () => {
               <ToastContainer position='top-center'/>
     
     <DataTable
-      title="Courses - List"
+      title="Faculties - List"
       fixedHeader
       fixedHeaderScrollHeight="450px"
       selectableRows
@@ -155,7 +151,7 @@ const CourseList = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Type text to Search..."/>
-                  <a href="/DesignCourse" className="btn btn-success pull-right">
+                  <a href="/Faculties" className="btn btn-success pull-right">
           <span className="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Add New
         </a>
         </div>
@@ -169,4 +165,4 @@ const CourseList = () => {
   );
 };
 
-export default CourseList;
+export default FacultiesList;

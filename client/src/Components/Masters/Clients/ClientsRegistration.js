@@ -150,8 +150,9 @@ const ClientsRegistration = () => {
   const validate = (values) => {
     const errors = {};
     if (values.controller_id==="0") errors.controller_id = "Ministry/Department is REQUIRED.";    
-    if (!values.client_descr) errors.client_descr = "Employee Name is REQUIRED.";
+    if (!values.client_descr) errors.client_descr = "Office Name is REQUIRED.";
     if (!values.client_address) errors.client_address = "Address is REQUIRED.";
+    if (!values.email_id) errors.email_id = "EMail ID is REQUIRED.";
     if (!values.login_id) errors.login_id = "Login ID is REQUIRED.";
     if (values.state_id==="0") errors.state_id = "State is REQUIRED.";
     if(values.tc_id==="0"){errors.tc_id = "Nearest Training Centre is REQUIRED.";}          
@@ -171,10 +172,11 @@ const ClientsRegistration = () => {
               <select autoFocus className="ui fluid dropdown" name="controller_id" value={state.controller_id} onChange={handleChange} readOnly={action} >
                 <option value="0">---Select Ministry/Department---</option>
                 {controllerData.map((controller) => (
-                  <option value={controller.id}>{controller.description} &nbsp;&nbsp; {controller.controller_code}</option>
+                  <option value={controller.id}>{controller.description} &nbsp;-&nbsp; {controller.controller_code}</option>
                 ))}
                 ;
               </select>
+              <small>Select <b>[Others - 999]</b> as Ministry / Department for Non-Central Government Offices</small>
               <p className="error">{formErrors.controller_id}</p>              
             </div>
             <div className="field">
@@ -187,7 +189,7 @@ const ClientsRegistration = () => {
               <label>Office Name</label>
                 <input type="text" name="client_descr"  maxLength={40} autoComplete="off" value={state.client_descr || ""} placeholder="Office Name" onChange={handleChange} readOnly={action} />
             </div>
-
+              <p className="error">{formErrors.client_descr}</p>              
             <div className="field">
                 <label>Address</label>
                 <textarea rows="2" name="client_address" autoComplete='off' maxLength={240} value={state.client_address || ""} onChange={handleChange} readOnly={action} />
@@ -202,7 +204,7 @@ const ClientsRegistration = () => {
                     <option value={state.id}>{state.description}</option>
                     ))};
                     </select>
-                    <p className="error">{formErrors.desig_id}</p>                
+                    <p className="error">{formErrors.state_id}</p>                
                 </div>
                 <div className="field">
                 <label>Nearest INGAF Training Centre</label>
@@ -225,14 +227,13 @@ const ClientsRegistration = () => {
                 <label>E Mail ID</label>
                 <input type="text" name="email_id" autoComplete="off" value={state.email_id} placeholder="E Mail ID" onChange={handleChange} readOnly={action}/>
               </div>
+              <p className="error">{formErrors.email_id}</p>                            
             </div>
           <div className="two fields">
-
             <div className="field">
               <label>Phone Nos.</label>
               <input type="text" name="phone_nos" autoComplete="off" value={state.phone_nos} placeholder="Phone Nos." onChange={handleChange} readOnly={action}/>
             </div>
-
             <div className="field">
               <label>Mobile No.</label>
               <input type="text" name="mobile_no" autoComplete="off" value={state.mobile_no} placeholder="Mobile No." onChange={handleChange} readOnly={action}/>
@@ -254,8 +255,9 @@ const ClientsRegistration = () => {
                 ))}
                 ;
               </select>
+              <p className="error">{formErrors.status_id}</p>              
             </div>
-            <p className="error">{formErrors.status_id}</p>
+
           </div>          
           <button className="ui button primary w-20" hidden={action? "hidden" : ""}>{id? "Update" : "Save"}</button>
             {/* <input type="submit" className='btn btn-primary w-10' value={id? "Update" : "Save"}/> */}
