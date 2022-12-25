@@ -158,8 +158,7 @@ const validate = (values) => {
                 <option value="0">---Select Training Type - Main---</option>
                 {ttMainData.map((ttm) => (
                   <option value={ttm.id}>{ttm.description}</option>
-                ))}
-                ;
+                ))};
               </select>
             </div>
 

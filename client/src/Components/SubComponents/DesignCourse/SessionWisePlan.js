@@ -6,6 +6,7 @@ import Header from "../../CommonComponents/Header"
 import { toast, ToastContainer } from "react-toastify";
 import { Form } from 'semantic-ui-react'
 import DateWiseSessions from './DateWiseSessions';
+import { convertDate } from '../../../Utils/Utils';
 
 
 const dt = new Date();
@@ -31,22 +32,20 @@ const SessionWisePlan = () => {
     const [mainTopicsData, setMainTopicsData] = useState([]);    
     const [subTopicsData, setSubTopicsData] = useState([]);        
     const [courseData, setCourseData] = useState([]);            
-    const [courseDataPeriod, setCourseDataPeriod] = useState([]);                
+    const [coursePeriod, setCoursePeriod] = useState([]);                
     const [state, setState]=useState(initialValues);
     const [formErrors, setFormErrors]=useState({});
     const [isSubmit, setIsSubmit]=useState(false);
     const [oldStatus, setOldStatus]=useState("");
     const [trainingType, setTrainingType]=useState("0");    
     const [main_topic_id, setTopic]=useState("0");        
-    const [dates, setDates]=useState([]);            
+    const [dateFrom, setDateFrom]=useState("");            
+    const [dateUpto, setDateUpto]=useState("");                
+    // const [dates, setDates]=useState(["2022-12-21","2022-12-22","2022-12-23","2022-12-24","2022-12-25"]);            
     
     const {tc_id,tt_sub_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id,status_id} = state;
 
     const {action, id} = useParams();
-
-    
-
- 
 // useEffect(()=>{
 //   axios.get(`http://localhost:5000/getById/office_universe/${id}`)
 //     .then((response) => {
@@ -104,6 +103,13 @@ const handleChange = (e) =>{
       axios.get(`http://localhost:5000/get/courses/${e.target.value}`)
       .then((response) => {
         setCourseData(response.data);
+        const d1 = response.data[0].date_from;
+        const d1date = new Date(d1);
+        setDateFrom(convertDate(d1date));
+
+        const d2 = response.data[0].date_upto;
+        const d2date = new Date(d2);
+        setDateUpto(convertDate(d2date));
       })
       .catch((err) => {
         console.log(err);
@@ -112,34 +118,25 @@ const handleChange = (e) =>{
     if(e.target.name === "main_topic_id")
     {
       const course_id = e.target.value;
-      // console.log("coming in main tttopic-id..."+course_id);      
       axios.get(`http://localhost:5000/get/courses2/${course_id}`) 
       .then((response) => {
-        console.log("coming in response ...")        
-        // setDates(["01/02/2023","02/02/2023","03/02/2023","04/02/2023"])
-//        console.log("Dates:"+dates);
-        setCourseDataPeriod(JSON.stringify(response.data[0]));
-        console.log("Response data:"+JSON.stringify(response.data[0]));   
-        const newData = JSON.stringify(response.data[0]);
-        //let dt1 = new Date(JSON.stringify(response.data[0].date_from).substring(0,10)); 
-        let dt1 = new Date(newData.date_from); 
-        let main_id = new Date(newData.main_topic_id);   
-        console.log("Dt1:"+dt1)
-        console.log("mtp:"+main_id)
+        // console.log("Response data:"+JSON.stringify(response.data[0]));   
+        const main_id = response.data[0].main_topic_id;
+        setTopic(main_id);
+        const dt1 = response.data[0].date_from;
+        const dt1date = new Date(dt1);
+        const dt2 = response.data[0].date_upto;
+        const dt2date = new Date(dt2);
         let course_period=[];  
-        while(dt1 <= response.data[0].date_upto)
+        while(dt1date <= dt2date)
         {
-          course_period = [...course_period, dt1]
-          // dt1.setDate(dt1.getDate()+1)
+          course_period.push(convertDate(dt1date))
+          //course_period.push(dt1date.getFullYear() + "-" + dt1date.getMonth() + "-" +dt1date.getDate())
+          dt1date.setDate(dt1date.getDate()+1)
         }
-       console.log("Period geneated:"+course_period)  
-        // for (var i=0; i<10; i++){
-
-        // }
-        console.log("Course Data Period:"+courseDataPeriod);    
+       setCoursePeriod(course_period);
       })
       .catch((err) => {
-
         console.log(err);
       });
     }
@@ -245,7 +242,11 @@ const handleSubmit = (e) =>{
                         className="ui fluid dropdown" name="main_topic_id" value={state.main_topic_id} onChange={handleChange} readOnly={action} >
                         <option value="0">---Select Topic---</option>
                         {courseData.map((mtp) => (
-                        <option value={mtp.course_id}>{mtp.topic} ( {mtp.date_from.toString().substring(0,10)} to {mtp.date_upto.toString().substring(0,10)} )</option>
+                          // const dtfr = convertDate(courseData.date_from);
+                         //<option value={mtp.course_id}>{mtp.topic} ( {mtp.date_from.toString().substring(0,10)} to {mtp.date_upto.toString().substring(0,10)} )</option>
+                        //<option value={mtp.course_id}>{mtp.topic} ( {dateFrom} to {dateUpto} )</option>                         
+                        <option value={mtp.course_id}>{mtp.topic} ( {convertDate(new Date(mtp.date_from))} to {convertDate(new Date(mtp.date_upto))} )</option>                                                 
+                        //  <option value={mtp.course_id}>{mtp.topic} ( {mtp.convertDate(date_from.toString().substring(0,10))} to {mtp.convertDate(date_upto.toString().substring(0,10))} )</option>                        
                         ))}
                         ;
                     </select>
@@ -286,8 +287,10 @@ const handleSubmit = (e) =>{
               <label>1st Session</label>
           </div>
           </Form.Group>
-          {dates.map((dt) => (
-            <DateWiseSessions cDate={dt} mainTopic={state.main_topic_id}/>          
+
+          {coursePeriod.map((dt) => (
+            <DateWiseSessions cDate={dt} mainTopic={main_topic_id}/>          
+            // <DateWiseSessions cDate={dt}/>                      
                 ))}
                 ;
         </div>      

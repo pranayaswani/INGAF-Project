@@ -1202,11 +1202,12 @@ app.get('/get/courses2/:course_id',(req,res)=>{
    
     const {course_id} = req.params;
     const sqlCmd = "select id, date_from, date_upto, main_topic_id from  trn_courses where id = ?";
+    //const sqlCmd = "select main_topic_id from  trn_courses where id = ?";    
     db.query(sqlCmd,[course_id], (err, result)=>{
 //        if(err) throw err;
     if(err) console.log(err);
-    console.log("API Result:"+result);
-    res.send(result);
+    console.log("API Result:"+JSON.stringify(result));
+    res.send(JSON.stringify(result));
     })    
 });
 
