@@ -1211,6 +1211,34 @@ app.get('/get/courses2/:course_id',(req,res)=>{
     })    
 });
 
+app.post('/post/sessionwiseplan', (req, res)=>{
+    const {course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4} = req.body;
+    const sqlInsert = "insert into trn_session_wise_plan (course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4) values (?,?, ?, ?, ?, ?)";
+    db.query(sqlInsert, [course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4], (error, result)=>{
+        if(error){console.log(error)}
+        if(result){res.send(result)}
+    });
+});
+
+app.put('/update/sessionwiseplan/:course_id/:course_date', (req, res)=>{
+    const {course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4} = req.body;
+    const sqlInsert = "update trn_session_wise_plan set sub_topic_id1 = ?, sub_topic_id2 = ?, sub_topic_id3 =?, sub_topic_id4=? where course_id = ?";
+    db.query(sqlInsert, [sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4, course_id], (error, result)=>{
+        if(error){console.log(error)}
+        if(result){res.send(result)}
+    });
+});
+
+
+app.get(`/get/sessionwiseplan_check/:course_id/:course_date`,(req,res)=>{
+    const {course_id, course_date} = req.params
+    // const sqlCmd = "select id from trn_session_wise_plan where course_id = ? and course_date = ?"
+    const sqlCmd = "select id from trn_session_wise_plan where course_id = ?"    
+    db.query(sqlCmd, [course_id],(err,result)=>{
+        if(err) throw err;
+        res.send(result);
+    });
+});
 
 //--------------- remaining APIs --------------------
 

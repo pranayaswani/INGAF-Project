@@ -33,84 +33,31 @@ const DateWiseSessions = (props) => {
         });
    },[props.mainTopic])
 
-   useEffect(() => {
-    if(!sub_topic_id1=="0")
+   const handleChange = (e) =>{
+    e.preventDefault();
+    alert(e.target.name);
+    const {name, value}=e.target;
+    console.log("nm:"+e.target.name  + " vl:"+e.target.value)
+    setState(({[name]:value},...state) => {
+      console.log(state)
+    });
+
+    console.log("state: "+JSON.stringify(state))
+    axios.post("http://localhost:5000/post/sessionwiseplan",
+    {course_id, course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4})
+    .then((res)=>
     {
-    console.log("UE:"+course_id+ " course date: "+course_date)
-    axios.get(`http://localhost:5000/get/sessionwiseplan_check/${course_id}/${course_date}`)
-    .then((res1)=>
-    {
-      if(res1.data.length>0)
+      alert('comng...'+e.target.name)
+      if(res.status==200)
       {
-        console.log("coming in update...");
-        axios.put(`http://localhost:5000/update/sessionwiseplan/${course_id}/${course_date}`,
-          {course_id, course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4})
-          .then((res)=>
-          {
-            if(res.status==200)    
-            {
-              //toast.success("Record Added Successfully...");
-              // document.write("Record Added Successfully...");
-              // setState(initialValues);
-            }
-          }).catch((err)=>
-          {
-            toast.error("Some isssue in Saving...");
-          }); 
-      }else
-      { 
-        console.log("state: "+JSON.stringify(state))
-        console.log("coming in add...");
-        axios.post("http://localhost:5000/post/sessionwiseplan",
-        {course_id, course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4})
-        .then((res)=>
-        {
-          if(res.status==200)
-          {
-            //toast.success("Record Added Successfully...");
-            // document.write("Record Added Successfully...");
-            // setState(initialValues);
-          }
-        }).catch((err)=>
-        {
-          toast.error("Some isssue in Saving...");
-        }); 
+        //toast.success("Record Added Successfully...");
+        // document.write("Record Added Successfully...");
+        // setState(initialValues);
       }
     }).catch((err)=>
     {
       toast.error("Some isssue in Saving...");
     }); 
-
-  }
-},[sub_topic_id1,sub_topic_id2,sub_topic_id3,sub_topic_id4])
-
-
-   const handleChange = (e) =>{
-    e.preventDefault();
-    // alert(e.target.name);
-    const {name, value}=e.target;
-    // console.log("nm:"+e.target.name  + " vl:"+e.target.value)
-    setState({...state,[name]:value})
-    //  => {
-    //   console.log(state)
-    // });
-
-    // console.log("state: "+JSON.stringify(state))
-    // axios.post("http://localhost:5000/post/sessionwiseplan",
-    // {course_id, course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4})
-    // .then((res)=>
-    // {
-    //   alert('comng...'+e.target.name)
-    //   if(res.status==200)
-    //   {
-    //     //toast.success("Record Added Successfully...");
-    //     // document.write("Record Added Successfully...");
-    //     // setState(initialValues);
-    //   }
-    // }).catch((err)=>
-    // {
-    //   toast.error("Some isssue in Saving...");
-    // }); 
    }
 
     
