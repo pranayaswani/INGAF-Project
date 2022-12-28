@@ -8,19 +8,10 @@ import { Form } from 'semantic-ui-react'
 import DateWiseSessions from './DateWiseSessions';
 import { convertDate } from '../../../Utils/Utils';
 
-
 const dt = new Date();
 const initialValues = {
     tc_id:"3",
-    tt_main_id:"0",  
-    tt_sub_id:"0",      
-    main_topic_id:"0",      
-    mode_of_training:"0",        
-    date_from:"",    
-    date_upto:"",      
-    last_date:"",          
-    course_fee:0,     
-    status_id:"3",           
+    course_id:"",
   }
 
   
@@ -39,6 +30,7 @@ const SessionWisePlan = () => {
     const [oldStatus, setOldStatus]=useState("");
     const [trainingType, setTrainingType]=useState("0");    
     const [main_topic_id, setTopic]=useState("0");        
+    const [courseID, setCourseID]=useState("0");            
     const [dateFrom, setDateFrom]=useState("");            
     const [dateUpto, setDateUpto]=useState("");                
     // const [dates, setDates]=useState(["2022-12-21","2022-12-22","2022-12-23","2022-12-24","2022-12-25"]);            
@@ -118,6 +110,7 @@ const handleChange = (e) =>{
     if(e.target.name === "main_topic_id")
     {
       const course_id = e.target.value;
+      setCourseID(course_id);
       axios.get(`http://localhost:5000/get/courses2/${course_id}`) 
       .then((response) => {
         // console.log("Response data:"+JSON.stringify(response.data[0]));   
@@ -278,18 +271,18 @@ const handleSubmit = (e) =>{
               <label>1st Session</label>
           </div>
           <div className="field">
-              <label>1st Session</label>
+              <label>2nd Session</label>
           </div>
           <div className="field">
-              <label>1st Session</label>
+              <label>3rd Session</label>
           </div>
           <div className="field">
-              <label>1st Session</label>
+              <label>4th Session</label>
           </div>
           </Form.Group>
 
           {coursePeriod.map((dt) => (
-            <DateWiseSessions cDate={dt} mainTopic={main_topic_id}/>          
+            <DateWiseSessions courseID = {courseID} cDate={dt} mainTopic={main_topic_id}/>          
             // <DateWiseSessions cDate={dt}/>                      
                 ))}
                 ;

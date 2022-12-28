@@ -4,6 +4,8 @@ import {Link} from 'react-router-dom';
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import DataTable from "react-data-table-component";
+import { convertDate } from '../../../Utils/Utils';
+
 
 // react table pagination sorting filter link https://www.youtube.com/watch?v=rgY1oPNVgwU
 const CourseList = () => {
@@ -70,14 +72,14 @@ const CourseList = () => {
       },
       {
         name: <b>Date From</b>,
-        selector: (row) => row.date_from,
+        selector: (row) => convertDate(new Date(row.date_from)),
         sortable: true,
         width:"112px"
       },
 
       {
         name: <b>Date Upto</b>,
-        selector: (row) => row.date_upto,
+        selector: (row) => convertDate(new Date(row.date_upto)),
         sortable: true,
         width:"112px"
       },

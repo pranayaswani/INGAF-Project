@@ -1,4 +1,3 @@
-//npm run backend to start the backend server
 const express = require("express");
 
 const mysql = require("mysql2");
@@ -1212,36 +1211,30 @@ app.get('/get/courses2/:course_id',(req,res)=>{
 });
 
 app.post('/post/sessionwiseplan', (req, res)=>{
-    const {course_id,newDate, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4} = req.body;
-    console.log("API course date:"+newDate)
+    const {course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4} = req.body;
     const sqlInsert = "insert into trn_session_wise_plan (course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4) values (?,?, ?, ?, ?, ?)";
-    db.query(sqlInsert, [course_id,newDate, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4], (error, result)=>{
+    db.query(sqlInsert, [course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4], (error, result)=>{
         if(error){console.log(error)}
         if(result){res.send(result)}
     });
 });
 
-app.put('/update/sessionwiseplan/:course_id/:newDate', (req, res)=>{
-    const {course_id,newDate, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4} = req.body;
-    const sqlInsert = "update trn_session_wise_plan set sub_topic_id1 = ?, sub_topic_id2 = ?, sub_topic_id3 =?, sub_topic_id4=? where course_id = ? and course_date = ?";
-    db.query(sqlInsert, [sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4, course_id, newDate], (error, result)=>{
+app.put('/update/sessionwiseplan/:course_id/:course_date', (req, res)=>{
+    const {course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4} = req.body;
+    const sqlInsert = "update trn_session_wise_plan set sub_topic_id1 = ?, sub_topic_id2 = ?, sub_topic_id3 =?, sub_topic_id4=? where course_id = ?";
+    db.query(sqlInsert, [sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4, course_id], (error, result)=>{
         if(error){console.log(error)}
         if(result){res.send(result)}
     });
 });
 
-app.get(`/get/sessionwiseplan_check/:course_id/:checkDate`,(req,res)=>{
-    // alert("coming in check with date as : ")  
-    const {course_id, checkDate} = req.params
-    console.log("received in Check API Date: "+checkDate)
-    //const sqlCmd = "select id from trn_session_wise_plan where course_id = ? and course_date = ?"
-    const sqlCmd = "select id from trn_session_wise_plan where course_id = "+ course_id +" and course_date = '" + checkDate + "'";
-    console.log(sqlCmd);
-    //const sqlCmd = "select id from trn_session_wise_plan where course_id = ?"    
-//    db.query(sqlCmd, [course_id, newDate],(err,result)=>{
-    db.query(sqlCmd,(err,result)=>{    
-        if(err) res.send(err);  // throw err;
-        console.log(result);
+
+app.get(`/get/sessionwiseplan_check/:course_id/:course_date`,(req,res)=>{
+    const {course_id, course_date} = req.params
+    // const sqlCmd = "select id from trn_session_wise_plan where course_id = ? and course_date = ?"
+    const sqlCmd = "select id from trn_session_wise_plan where course_id = ?"    
+    db.query(sqlCmd, [course_id],(err,result)=>{
+        if(err) throw err;
         res.send(result);
     });
 });
@@ -1298,4 +1291,3 @@ app.get('/get/current_status',(req,res)=>{
 //         res.send(result);
 //     });
 // });
-

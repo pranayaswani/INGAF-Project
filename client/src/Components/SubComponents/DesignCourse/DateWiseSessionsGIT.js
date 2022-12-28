@@ -2,16 +2,15 @@ import React,{useState, useEffect} from 'react';
 import axios from 'axios';
 import { Form } from 'semantic-ui-react'
 import { toast, ToastContainer } from "react-toastify";
-import { reverseDate, extractDate, convertDate, reverseDateAsString } from '../../../Utils/Utils';
+import { reverseDate } from '../../../Utils/Utils';
 
 
 
 const DateWiseSessions = (props) => {
 
   const initialValues = {
-    course_id:props.courseID,
-//    course_date: new Date(reverseDate(props.cDate)),
-    course_date: convertDate(new Date(reverseDate(props.cDate))),
+    course_id:"36",
+    course_date: new Date(reverseDate(props.cDate)),
     sub_topic_id1:"",
     sub_topic_id2:"",
     sub_topic_id3:"",
@@ -37,20 +36,15 @@ const DateWiseSessions = (props) => {
    useEffect(() => {
     if(!sub_topic_id1=="0")
     {
-    const newDate = new Date(reverseDate(props.cDate)+ 'UTC')
-    const checkDate = reverseDateAsString(props.cDate)
-    // const newDate =  + reverseDate(props.cDate);
-    console.log("coming in check with newdate as : "+newDate+ " check date : "+checkDate)    
-      //const revDate = reverseDate(course_date);
-    axios.get(`http://localhost:5000/get/sessionwiseplan_check/${course_id}/${checkDate}`)
-    //axios.get(`http://localhost:5000/get/sessionwiseplan_check/${course_id}`)    
+    console.log("UE:"+course_id+ " course date: "+course_date)
+    axios.get(`http://localhost:5000/get/sessionwiseplan_check/${course_id}/${course_date}`)
     .then((res1)=>
     {
       if(res1.data.length>0)
       {
         console.log("coming in update...");
-          axios.put(`http://localhost:5000/update/sessionwiseplan/${course_id}/${newDate}`,
-          {course_id, newDate, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4})
+        axios.put(`http://localhost:5000/update/sessionwiseplan/${course_id}/${course_date}`,
+          {course_id, course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4})
           .then((res)=>
           {
             if(res.status==200)    
@@ -66,12 +60,9 @@ const DateWiseSessions = (props) => {
       }else
       { 
         console.log("state: "+JSON.stringify(state))
-        console.log("coming add date.."+newDate);
-//        console.log("Prv"+props.cDate)
-
-  //      console.log("New"+newDate)        
+        console.log("coming in add...");
         axios.post("http://localhost:5000/post/sessionwiseplan",
-        {course_id,newDate, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4})
+        {course_id, course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4})
         .then((res)=>
         {
           if(res.status==200)
