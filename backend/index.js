@@ -39,7 +39,6 @@ app.listen(5000, () => {
 app.get('/get/cities',(req,res)=>{
     db.query("select a.id, a.descr as description, b.descr as sts from mst_cities a, mst_current_status b where a.status_id = b.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -76,7 +75,6 @@ app.get('/getById/cities/:id',(req,res)=>{
     const sqlCmd = "select id, descr, status_id from mst_cities where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -108,7 +106,6 @@ app.put('/updateStatus/cities/:id',(req,res)=>{
 app.get('/get/designations',(req,res)=>{
     db.query("select a.id, a.descr as description, b.descr as sts from mst_designations a, mst_current_status b where a.status_id = b.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -145,7 +142,6 @@ app.get('/getById/designations/:id',(req,res)=>{
     const sqlCmd = "select id, descr, status_id from mst_designations where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -175,7 +171,6 @@ app.put('/updateStatus/designations/:id',(req,res)=>{
 app.get('/get/expenditure_heads',(req,res)=>{
     db.query("select a.id, a.descr as description, b.descr as sts from mst_expenditure_heads a, mst_current_status b where a.status_id = b.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -212,7 +207,6 @@ app.get('/getById/expenditure_heads/:id',(req,res)=>{
     const sqlCmd = "select id, descr, status_id from mst_expenditure_heads where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -243,7 +237,6 @@ app.put('/updateStatus/expenditure_heads/:id',(req,res)=>{
 app.get('/get/training_types_main',(req,res)=>{
     db.query("select a.id, a.descr as description, b.descr as sts from mst_training_types_main a, mst_current_status b where a.status_id = b.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -280,7 +273,6 @@ app.get('/getById/training_types_main/:id',(req,res)=>{
     const sqlCmd = "select id, descr, status_id from mst_training_types_main where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -311,7 +303,6 @@ app.put('/updateStatus/training_types_main/:id',(req,res)=>{
 app.get('/get/training_types_sub',(req,res)=>{
     db.query("select a.id, a.descr as description, b.descr as maintype, c.descr as sts from mst_training_types_sub a, mst_training_types_main b, mst_current_status c where a.tt_main_id = b.id and  a.status_id = c.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -348,7 +339,6 @@ app.get('/getById/training_types_sub/:id',(req,res)=>{
     const sqlCmd = "select id, descr, tt_main_id, status_id from mst_training_types_sub where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -381,7 +371,6 @@ const tblName1 ="mst_topics_main";
 app.get(`/get/${apiRoute1}` ,(req,res)=>{
     db.query("select a.id, a.descr as description, a.is_approved, b.descr as sts from "+tblName1+" a, mst_current_status b where a.status_id = b.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(tblName);
         res.send(result);
     });
 });
@@ -391,7 +380,6 @@ app.post(`/post/${apiRoute1}`, (req, res)=>{
     const sqlInsert = "insert into "+ tblName1+" (descr, status_id) values (?, ?)";
     db.query(sqlInsert, [descr, status_id], (error, result)=>{
         if(error){return error}
-        console.log(result);
         if(result){res.send(result)}
     });
 });
@@ -414,7 +402,7 @@ app.delete(`/delete/${apiRoute1}/:id`,(req,res)=>{
             //res.send(error.errno)
             res.sendStatus(409)
         }else 
-            {   console.log("delete result..",result);
+            {   
                 res.send(result)}    
     });
 });
@@ -424,7 +412,6 @@ app.get(`/getById/${apiRoute1}/:id`,(req,res)=>{
     const sqlCmd = "select id, descr, status_id from "+tblName1+" where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -456,8 +443,6 @@ const tblName3 ="mst_states";
 app.get(`/get/${apiRoute3}` ,(req,res)=>{
     db.query("select a.id, a.descr as description, a.is_approved, b.descr as sts from "+tblName3+" a, mst_current_status b where a.status_id = b.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log("State Tbl:"+tblName3)
-        console.log(result)
         res.send(result);
     });
 });
@@ -468,8 +453,6 @@ app.post(`/post/${apiRoute3}`, (req, res)=>{
     db.query(sqlInsert, [descr, status_id], (error, result)=>{
         if(error){ console.log(error);
             return error}
-
-        console.log(result);
         if(result){res.send(result)}
     });
 });
@@ -502,7 +485,6 @@ app.get(`/getById/${apiRoute3}/:id`,(req,res)=>{
     const sqlCmd = "select id, descr, status_id from "+tblName3+" where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -535,7 +517,6 @@ const tblName4 ="mst_topics_sub";
 app.get(`/get/${apiRoute4}`,(req,res)=>{
     db.query("select a.id, a.descr as description, b.descr as maintype,a.is_approved, c.descr as sts from " + tblName4 + " a, mst_topics_main b, mst_current_status c where a.main_id = b.id and  a.status_id = c.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -544,7 +525,6 @@ app.get(`/get/${apiRoute4}/:mainTopic`,(req,res)=>{
     const {mainTopic} = req.params;
     db.query("select id, descr from " + tblName4 + " where main_id = "+ mainTopic + " order by descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -582,7 +562,6 @@ app.get(`/getById/${apiRoute4}/:id`,(req,res)=>{
     const sqlCmd = "select id, descr, main_id, status_id from " + tblName4 + " where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -614,7 +593,6 @@ app.put(`/updateStatus/${apiRoute4}/:id`,(req,res)=>{
 app.get('/get/user_roles',(req,res)=>{
     db.query("select a.id, a.descr as role, b.descr as sts from mst_user_roles a, mst_current_status b where a.status_id = b.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -650,7 +628,6 @@ app.get('/getById/user_roles/:id',(req,res)=>{
     const sqlCmd = "select id, descr, status_id from mst_user_roles where id=?";
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -682,7 +659,6 @@ const tblName5 ="mst_controllers";
 app.get(`/get/${apiRoute5}`,(req,res)=>{
     db.query("select a.id, a. controller_code, a.descr as description, a.is_approved, b.descr as sts from " + tblName5 + " a, mst_current_status b where a.status_id = b.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
@@ -718,7 +694,6 @@ app.get(`/get/${apiRoute5}_check_code/:controller_code`,(req,res)=>{
     const {controller_code} = req.params
     db.query("select *  from " + tblName5 + " where controller_code = '"  + controller_code + "'",(err,result)=>{
         if(err) throw err;
-        console.log("result from check_code:"+result)
         res.send(result);
     });
 });
@@ -736,10 +711,8 @@ app.delete(`/delete/${apiRoute5}/:id`,(req,res)=>{
 app.get(`/getById/${apiRoute5}/:id`,(req,res)=>{
     const {id} = req.params;
     const sqlCmd = "select id, controller_code, descr, status_id from " + tblName5 + " where id=?";
-    console.log("tbl:"+tblName5)
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
@@ -771,13 +744,11 @@ tblName ="mst_training_centres";
 app.get(`/get/${apiRoute}`,(req,res)=>{
     db.query("select a.id, a.descr as description, b.descr as city, contact_person,email_id,phone_nos,mobile_no, a.is_approved, c.descr as sts from " + tblName + " a, mst_cities b, mst_current_status c where a.city_id = b.id and a.status_id = c.id order by a.descr",(err,result)=>{
         if(err) throw err;
-        console.log(result);
         res.send(result);
     });
 });
 
 app.post(`/post/${apiRoute}`, (req, res)=>{
-    console.log("Table:"+tblName);
     const {descr, address, city_id, contact_person, email_id, phone_nos, mobile_no, status_id} = req.body;
     const sqlInsert = "insert into " + tblName + " (descr, address, city_id, contact_person, email_id, phone_nos, mobile_no, status_id) values (?, ?, ?, ?,?, ?, ?, ?)";
     db.query(sqlInsert, [descr, address, city_id, contact_person, email_id, phone_nos, mobile_no, status_id], (error, result)=>{
@@ -809,20 +780,16 @@ app.delete(`/delete/${apiRoute}/:id`,(req,res)=>{
 app.get(`/getById/${apiRoute}/:id`,(req,res)=>{
     const {id} = req.params;
     const sqlCmd = "select id, descr, address, city_id, contact_person, email_id, phone_nos, mobile_no, status_id from " + tblName + " where id=?";
-    console.log("tbl:"+tblName)
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        console.log(result);
         res.send(result);
     });
 });
 
 app.put(`/update/${apiRoute}/:id`,(req,res)=>{
     const {id} = req.params;
-    console.log("Tbl:"+tblName)
     const {descr, address, city_id, contact_person, email_id, phone_nos, mobile_no, status_id} = req.body;
     const sqlCmd = "update " + tblName + " set descr = ?, address = ?,city_id = ?,contact_person = ?,email_id = ?,phone_nos = ?,mobile_no = ?, status_id = ? where id = ?";
-    console.log(sqlCmd);
     db.query(sqlCmd, [descr, address, city_id, contact_person, email_id, phone_nos, mobile_no, status_id, id], (error, result)=>{
         if(error){res.send(error)}
         if(result){res.send(result)}
@@ -847,7 +814,6 @@ const tblNameOU ="mst_office_universe";
 app.get(`/get/${apiRouteOU}`,(req,res)=>{
     db.query("select a.id, a.emp_name, b.descr as designation, a.phone_nos,a.mobile_no,a.email_id, c.descr as user_role,d.descr as tc, a.login_id, a.is_approved, e.descr as sts from " + tblNameOU + " a, mst_designations b, mst_user_roles c, mst_training_centres d, mst_current_status e where a.desig_id = b.id and a.user_role_id = c.id and a.tc_id = d.id and a.status_id = e.id order by a.emp_name",(err,result)=>{
         if(err) throw err;
-        // console.log(result);
         res.send(result);
     });
 });
@@ -887,7 +853,6 @@ app.get(`/getById/${apiRouteOU}/:id`,(req,res)=>{
     console.log("tbl:"+tblName2)
     db.query(sqlCmd, id, (error, result)=>{
         if(error) throw error;
-        // console.log(result);
         res.send(result);
     });
 });
@@ -900,7 +865,7 @@ app.put(`/update/${apiRouteOU}/:id`,(req,res)=>{
     const sqlCmd = "update " + tblNameOU + " set emp_name = ?, desig_id = ?,phone_nos = ?,mobile_no = ?,email_id = ?,user_role_id = ?, login_id = ?, status_id = ? where id = ?";
     db.query(sqlCmd, [emp_name, desig_id, phone_nos, mobile_no,email_id,user_role_id,login_id, status_id, id], (error, result)=>{
         if(error){res.send(error)}
-        if(result){ console.log(result);
+        if(result){ 
             res.send(result)}
     }); 
 });
@@ -922,7 +887,6 @@ const tblNameF ="mst_faculties";
 app.get(`/get/${apiRouteF}`,(req,res)=>{
     db.query("select a.id, a.faculty_name,a.office_name, b.descr as designation, a.phone_nos,a.mobile_no,a.email_id,d.descr as tc, a.is_approved, e.descr as sts from " + tblNameF + " a, mst_designations b, mst_training_centres d, mst_current_status e where a.desig_id = b.id and a.tc_id = d.id and a.status_id = e.id order by a.faculty_name",(err,result)=>{
         if(err) throw err;
-        // console.log(result);
         res.send(result);
     });
 });
@@ -1180,10 +1144,9 @@ app.get('/get/courses/:tt_sub_id',(req,res)=>{
     const {tt_sub_id} = req.params;
     const sqlCmd = "select a.id as course_id, b.descr as topic, b.id as topic_id, date_from, date_upto from trn_courses a, mst_topics_main b where a.main_topic_id = b.id and tt_sub_id  = "+tt_sub_id;
     db.query(sqlCmd, (err, result)=>{
-        if(err) throw err;
-        else {
-    // console.log(result);
-    res.send(result);}
+    if(err) throw err;
+    else {
+        res.send(result);}
     })    
 });
 
@@ -1191,29 +1154,33 @@ app.get('/get/courses1/:tt_sub_id/:main_topic_id',(req,res)=>{
     const {tt_sub_id, main_topic_id} = req.params;
     const sqlCmd = "select a.id, date_from, date_upto from trn_courses a, mst_topics_main b where a.main_topic_id = b.id and tt_sub_id  = ? and main_topic_id = ?";
     db.query(sqlCmd,[tt_sub_id, main_topic_id], (err, result)=>{
-        if(err) throw err;
-
-    // console.log(result);
+    if(err) throw err;
     res.send(result);
     })    
 });
 
 app.get('/get/courses2/:course_id',(req,res)=>{
-   
     const {course_id} = req.params;
     const sqlCmd = "select id, date_from, date_upto, main_topic_id from  trn_courses where id = ?";
-    //const sqlCmd = "select main_topic_id from  trn_courses where id = ?";    
     db.query(sqlCmd,[course_id], (err, result)=>{
-//        if(err) throw err;
     if(err) console.log(err);
     console.log("API Result:"+JSON.stringify(result));
     res.send(JSON.stringify(result));
     })    
 });
 
+app.get('/get/courses/:dateFrom/:dateUpto',(req,res)=>{
+    const {dateFrom, dateUpto} = req.params;
+    const sqlCmd = "select a.id, b.descr as training_type, c.descr as main_topic, date_from, date_upto, mode_of_training, a.is_approved, d.descr as sts from trn_courses a, mst_training_types_sub b, mst_topics_main c, mst_current_status d where a.tt_sub_id = b.id and a.main_topic_id = c.id and a.status_id = d.id and date_from between ? and ? order by date_from";
+    db.query(sqlCmd,[dateFrom, dateUpto], (err, result)=>{
+    if(err) console.log(err);
+    res.send(JSON.stringify(result));
+    })    
+});
+
+
 app.post('/post/sessionwiseplan', (req, res)=>{
     const {course_id,newDate, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4} = req.body;
-    console.log("API course date:"+newDate)
     const sqlInsert = "insert into trn_session_wise_plan (course_id,course_date, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4) values (?,?, ?, ?, ?, ?)";
     db.query(sqlInsert, [course_id,newDate, sub_topic_id1, sub_topic_id2, sub_topic_id3, sub_topic_id4], (error, result)=>{
         if(error){console.log(error)}
@@ -1231,20 +1198,53 @@ app.put('/update/sessionwiseplan/:course_id/:newDate', (req, res)=>{
 });
 
 app.get(`/get/sessionwiseplan_check/:course_id/:checkDate`,(req,res)=>{
-    // alert("coming in check with date as : ")  
     const {course_id, checkDate} = req.params
-    console.log("received in Check API Date: "+checkDate)
-    //const sqlCmd = "select id from trn_session_wise_plan where course_id = ? and course_date = ?"
     const sqlCmd = "select id from trn_session_wise_plan where course_id = "+ course_id +" and course_date = '" + checkDate + "'";
     console.log(sqlCmd);
-    //const sqlCmd = "select id from trn_session_wise_plan where course_id = ?"    
-//    db.query(sqlCmd, [course_id, newDate],(err,result)=>{
     db.query(sqlCmd,(err,result)=>{    
         if(err) res.send(err);  // throw err;
         console.log(result);
         res.send(result);
     });
 });
+
+//--------------------- APIs - Nominations 
+
+app.post('/post/nominations', (req, res)=>{
+    const {client_id,tc_id,course_id,p_name,desig_id,email_id,mobile_no} = req.body;
+    const sqlInsert = "insert into trn_nominations (client_id,tc_id,course_id,p_name,desig_id,email_id,mobile_no) values (?, ?, ?, ?, ?, ?,?)";
+    db.query(sqlInsert, [client_id,tc_id,course_id,p_name,desig_id,email_id,mobile_no], (error, result)=>{
+        if(error){console.log(error)}
+        if(result){res.send(result)}
+    });
+});
+
+app.get('/get/nominations/:course_id',(req,res)=>{
+    const {course_id} = req.params;
+    db.query("select a.id, b.client_descr as client_name, a.course_id, p_name, c.descr as designation, a.email_id, a.mobile_no from trn_nominations a, mst_clients b, mst_designations c where a.client_id = b.id and a.desig_id = c.id and a.course_id ="+course_id,(err,result)=>{
+        if(err) throw err;
+        res.send(result);
+    });
+});
+
+app.get('/get/nominations/:course_id/:client_id',(req,res)=>{
+    const {course_id, client_id} = req.params;
+    const sqlCmd = "select a.id, b.client_descr as client_name, a.course_id, p_name, c.descr as designation, a.email_id, a.mobile_no from trn_nominations a, mst_clients b, mst_designations c where a.client_id = b.id and a.desig_id = c.id and a.course_id = ? and client_id= ?"
+    db.query(sqlCmd, [course_id,client_id]  ,(err,result)=>{
+        if(err) throw err;
+        res.send(result);
+    });
+});
+
+app.delete('/delete/nominations/:id',(req,res)=>{
+    const {id} = req.params;
+    const sqlCmd = "delete from trn_nominations where id = "+id;
+    db.query(sqlCmd, (error, result)=>{
+        if(error){return error}
+        if(result){return result}    
+    });
+});
+
 
 //--------------- remaining APIs --------------------
 

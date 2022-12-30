@@ -2,6 +2,11 @@
 - about us 
 - save reset icons in all components 
 - office universe and client registration - validate login id while saving 
+- nominations - delete - sometimes doesnt referesh below table 
+- nominations - reset details after address
+- nominations - validations
+- nominations - disable top details after first entry 
+
 
 
 

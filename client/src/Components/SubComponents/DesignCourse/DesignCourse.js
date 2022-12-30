@@ -16,7 +16,7 @@ const initialValues = {
     date_from:"",    
     date_upto:"",      
     last_date:"",          
-    course_fee:0,     
+    course_fee:"",     
     course_director_id:"0",       
     course_coordinator_id:"0",           
     status_id:"3",           
@@ -93,7 +93,6 @@ const resetForm = () =>{
 
 
 const handleChange = (e) =>{
-    console.log("e :"+e.target.name+" value:" +e.target.value);
     const {name, value}=e.target;
     setState({...state, [name]:value});
 }

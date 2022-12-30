@@ -37,3 +37,7 @@ course_director_id int not null, course_coordinator_id int not null,
 is_approved varchar(1) default 'N', status_id int not null, foreign key (tc_id) references mst_training_centres(id), foreign key (tt_main_id) references mst_training_types_main(id), foreign key (tt_sub_id) references mst_training_types_sub(id),
 foreign key (main_topic_id) references mst_topics_main(id), foreign key (course_director_id) references mst_office_universe(id), foreign key (course_coordinator_id) references mst_office_universe(id), foreign key (status_id) references mst_current_status(id))
 
+create table trn_nominations (id int auto_increment primary key, client_id int not null, tc_id int not null, course_id int not null, 
+p_name varchar(40) not null, desig_id int not null, email_id varchar(20) not null, mobile_no varchar(20) not null, is_approved varchar(1) default 'N',
+foreign key (client_id) references mst_clients(id), foreign key (desig_id) references mst_designations(id),
+foreign key (course_id) references trn_courses(id),foreign key (tc_id) references mst_training_centres(id))

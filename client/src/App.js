@@ -54,6 +54,9 @@ import FormMultiFields from "./FormMultiFields";
 import DesignCourse from "./Components/SubComponents/DesignCourse/DesignCourse.js"
 import CourseList from "./Components/SubComponents/DesignCourse/CourseList.js"
 import SessionWisePlan from "./Components/SubComponents/DesignCourse/SessionWisePlan.js"
+import GenerateCalendar from "./Components/SubComponents/DesignCourse/GenerateCalendar.js"
+import Nominations from "./Components/SubComponents/Nominations/Nominations.js"
+import NominationsApproval from "./Components/SubComponents/Nominations/NominationsApproval.js"
 
 // import PrepareCalendar from "./Components/SubComponents/PrepareCalendar.js"
 // import GudduList from "./Components/Masters/UserRoles/GudduList";
@@ -91,6 +94,9 @@ function App() {
         <Route path="/DesignCourse" element={<DesignCourse/>}/>        
         <Route path="/CourseList" element={<CourseList/>}/>     
         <Route path="/SessionWisePlan" element={<SessionWisePlan/>}/>             
+        <Route path="/GenerateCalendar" element={<GenerateCalendar/>}/>                     
+        <Route path="/Nominations" element={<Nominations/>}/>                             
+        <Route path="/NominationsApproval" element={<NominationsApproval/>}/>                                     
 
         <Route path="/TrainingTypesMain" element={<TrainingTypesMain/>}/>        
         <Route path="/TrainingTypesMain/:id" element={<TrainingTypesMain/>}/>                        

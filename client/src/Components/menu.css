@@ -70,7 +70,7 @@ body
 }
 
 .menu-bar ul li:hover .sub-menu-1 ul li{
-    width: 160px;
+    width: 200px;
     padding: 10px;
     border-bottom: 1px dotted #fff;
     background: transparent;
