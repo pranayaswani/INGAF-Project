@@ -5,17 +5,21 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import DataTable from "react-data-table-component";
 import { convertDate } from '../../../Utils/Utils';
+import { useSelector } from 'react-redux';
 
 
 // react table pagination sorting filter link https://www.youtube.com/watch?v=rgY1oPNVgwU
 const CourseList = () => {
+  const {EntityID}=useSelector((state)=>state.user.userDetails);
+  const [tc_id, setTCID] = useState(EntityID)    
+
   const [tblData, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
 
   const getData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/get/courses");
+      const response = await axios.get(`http://localhost:5000/get/courses/${tc_id}`);
       console.log(response);
       setData(response.data);
 

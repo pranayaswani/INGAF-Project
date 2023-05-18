@@ -7,6 +7,7 @@ import Home from "./Components/Home";
 import ContactUs from './Components/ContactUs/ContactUs';
 import Header from "./Components/CommonComponents/Header";
 import ClientsRegistration from "./Components/Masters/Clients/ClientsRegistration";
+import ClientsOfficeRegistration from "./Components/Masters/Clients/ClientsOfficeRegistration";
 import ClientsList from "./Components/Masters/Clients/ClientsList";
 // import Clients from "./Components/Masters/Clients/Clients";
 // import ClientsNew from "./Components/Masters/Clients/ClientsNew";
@@ -33,6 +34,7 @@ import OfficeUniverse from './Components/Masters/OfficeUniverse/OfficeUniverse';
 import FacultiesList from './Components/Masters/Faculties/FacultiesList';
 import Faculties from './Components/Masters/Faculties/Faculties';
 
+import Signatories from './Components/Masters/Signatories/Signatories';
 
 import ControllersList from './Components/Masters/Controllers/ControllersList';
 import Controllers from './Components/Masters/Controllers/Controllers';
@@ -50,6 +52,7 @@ import ExpenditureHeadsList from './Components/Masters/ExpenditureHeads/Expendit
 // import Masters from "./Components/Masters/Masters";
 import Services from "./Components/Services";
 import FormMultiFields from "./FormMultiFields";
+import SampleSelect from "./Components/Masters/Select";
 
 import DesignCourse from "./Components/SubComponents/DesignCourse/DesignCourse.js"
 import CourseList from "./Components/SubComponents/DesignCourse/CourseList.js"
@@ -57,20 +60,26 @@ import SessionWisePlan from "./Components/SubComponents/DesignCourse/SessionWise
 import GenerateCalendar from "./Components/SubComponents/DesignCourse/GenerateCalendar.js"
 import Nominations from "./Components/SubComponents/Nominations/Nominations.js"
 import NominationsApproval from "./Components/SubComponents/Nominations/NominationsApproval.js"
-
+import BillGeneration from "./Components/SubComponents/BillGeneration/BillGeneration.js"
+import Clock from './Components/SubComponents/Clock';
+import ApproveClients from "./Components/Masters/Clients/ApproveClients";
 // import PrepareCalendar from "./Components/SubComponents/PrepareCalendar.js"
 // import GudduList from "./Components/Masters/UserRoles/GudduList";
 // import GudduAdd from "./Components/Masters/UserRoles/GudduAdd";
 function App() {
+  const userType="";
+  const userName = "";
   return (
     <>
     {/* <NavBar/>     */}
     {/* <Header/> */}
     <Menu/>
       <Routes>
-        <Route exact path="/" element={<Home />} />        
+        <Route exact path="/" element={<Home />}/>        
 
+        <Route path="/Clock" element={<Clock/>}/>        
         <Route path="/FormSample" element={<FormMultiFields/>}/>        
+        <Route path="/SampleSelect" element={<SampleSelect/>}/>                
         <Route path="/UserRoles" element={<UserRoles/>}/>        
         <Route path="/UserRoles/:id" element={<UserRoles/>}/>                        
         <Route path="/UserRoles/:action/:id" element={<UserRoles/>}/>                                
@@ -97,6 +106,8 @@ function App() {
         <Route path="/GenerateCalendar" element={<GenerateCalendar/>}/>                     
         <Route path="/Nominations" element={<Nominations/>}/>                             
         <Route path="/NominationsApproval" element={<NominationsApproval/>}/>                                     
+        <Route path="/BillGeneration" element={<BillGeneration/>}/>                                             
+
 
         <Route path="/TrainingTypesMain" element={<TrainingTypesMain/>}/>        
         <Route path="/TrainingTypesMain/:id" element={<TrainingTypesMain/>}/>                        
@@ -128,7 +139,9 @@ function App() {
         <Route path="/Controllers/:action/:id" element={<Controllers/>}/>                                
         <Route path="/ControllersList" element={<ControllersList/>}/>     
 
+        <Route path="/ClientsYup" element={<ClientsOfficeRegistration/>}/>        
         <Route path="/ClientsRegistration" element={<ClientsRegistration/>}/>        
+        <Route path="/ApproveClients" element={<ApproveClients/>}/>                
         <Route path="/ClientsRegistration/:id" element={<ClientsRegistration/>}/>                        
         <Route path="/ClientsRegistration/:action/:id" element={<ClientsRegistration/>}/>                                
         <Route path="/ClientsList" element={<ClientsList/>}/>     
@@ -143,6 +156,8 @@ function App() {
         <Route path="/Faculties/:action/:id" element={<Faculties/>}/>                                
         <Route path="/FacultiesList" element={<FacultiesList/>}/>     
 
+        <Route path="/Signatories" element={<Signatories/>}/>                
+
         <Route path="/ExpenditureHeads" element={<ExpenditureHeads/>}/>        
         <Route path="/ExpenditureHeads/:id" element={<ExpenditureHeads/>}/>                        
         <Route path="/ExpenditureHeads/:action/:id" element={<ExpenditureHeads/>}/>                                
@@ -156,5 +171,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;

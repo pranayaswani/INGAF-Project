@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import { Form } from 'semantic-ui-react'
+import Multiselect from 'multiselect-react-dropdown';
 
 
 const options = [
-  { key: 'm', text: 'Male', value: 'male' },
-  { key: 'f', text: 'Female', value: 'female' },
-  { key: 'o', text: 'Other', value: 'other' },
+  {name: '---Select Topic---', id: 0},
+  {name: 'PFMS', id: 1},
+  {name: 'MS-Office', id: 2},
+  {name: 'Office Rules', id: 3},
+  {name: 'Programming', id: 4},      
 ]
+
+
+
 
 class FormMultiFields extends Component {
   state = {}
@@ -44,11 +50,19 @@ class FormMultiFields extends Component {
           />
           <Form.Radio
             label='Large'
-            value='lg'
+            value='lg' 
             checked={value === 'lg'}
             onChange={this.handleChange}
           />
         </Form.Group>
+        <Multiselect
+        options={options} // Options to display in the dropdown
+        showCheckbox
+        selectedValues={1} // Preselected value to persist in dropdown
+        onSelect={(e)=>console.log(e)} // Function will trigger on select event
+        onRemove={(e)=>console.log(e)} // Function will trigger on remove event
+        displayValue="name" // Property name to display in the dropdown options
+        />        
         <Form.TextArea label='About' placeholder='Tell us more about you...' />
         <Form.Checkbox label='I agree to the Terms and Conditions' />
         <Form.Button>Submit</Form.Button>

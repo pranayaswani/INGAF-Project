@@ -28,7 +28,7 @@ const TrainingCentres = () => {
     const {action, id} = useParams();
      
     useEffect(()=>{
-      axios.get(`http://localhost:5000/getById/training_centres/${id}`)
+      axios.get(`http://localhost:5000/training_centres/${id}`)
         .then((response) => {
           const {id, descr, address, city_id, contact_person, email_id, phone_nos, mobile_no, status_id} = response.data[0];
           setOldStatus(status_id);
@@ -93,7 +93,7 @@ const TrainingCentres = () => {
             }
             else
             {
-              axios.get(`http://localhost:5000/get/training_centres_check/${descr}/${id}`)
+              axios.get(`http://localhost:5000/training_centres_check/${descr}/${id}`)
               .then((res1)=>
               {
                 if(res1.data.length>0)
@@ -116,7 +116,7 @@ const TrainingCentres = () => {
                       });
                   }else
                   {
-                    axios.post("http://localhost:5000/post/training_centres",
+                    axios.post("http://localhost:5000/training_centres",
                     {descr, address, city_id, contact_person, email_id, phone_nos, mobile_no, status_id})
                     .then((res)=>
                     {
@@ -152,12 +152,12 @@ const TrainingCentres = () => {
             <Header caption = "Training Centres"/>
             <div className="field">
                 <label>Training Centre</label>
-                <input type="text"  name="descr" autoFocus autoComplete='off' maxLength={100} value={state.descr || ""} onChange={handleChange} disabled={action} />
+                <input type="text"  name="descr" autoFocus autoComplete='off' maxLength={100} value={state.descr || ""} onChange={handleChange} readOnly={action} />
             </div>
             <p className='error'>{formErrors.descr}</p>                            
             <div className="field">
                 <label>Address</label>
-                <textarea rows="2" name="address" autoComplete='off' maxLength={240} value={state.address || ""} onChange={handleChange} disabled={action} />
+                <textarea rows="2" name="address" autoComplete='off' maxLength={240} value={state.address || ""} onChange={handleChange} readOnly={action} />
             </div>
             <p className='error'>{formErrors.descr}</p>                            
             <div className="two fields">
@@ -174,33 +174,33 @@ const TrainingCentres = () => {
 
             <div className="field">
                 <label>Contact Person</label>
-                <input type="text"  name="contact_person"  autoComplete='off' maxLength={40} value={state.contact_person || ""} onChange={handleChange} disabled={action} />
+                <input type="text"  name="contact_person"  autoComplete='off' maxLength={40} value={state.contact_person || ""} onChange={handleChange} readOnly={action} />
                 {/* <p className='error'>{formErrors.contact_person}</p>                                             */}
             </div>
             </div>
             <div className="two fields">
             <div className="field">
                 <label>EMail ID</label>
-                <input type="text"  name="email_id"  autoComplete='off' maxLength={20} value={state.email_id || ""} onChange={handleChange} disabled={action} />
+                <input type="text"  name="email_id"  autoComplete='off' maxLength={20} value={state.email_id || ""} onChange={handleChange} readOnly={action} />
                 <p className='error'>{formErrors.email_id}</p>                                            
             </div>
             <div className="field">
                 <label>Phone Nos.</label>
-                <input type="text" name="phone_nos"  autoComplete='off' maxLength={20} value={state.phone_nos || ""} onChange={handleChange} disabled={action} />
+                <input type="text" name="phone_nos"  autoComplete='off' maxLength={20} value={state.phone_nos || ""} onChange={handleChange} readOnly={action} />
                 {/* <p className='error'>{formErrors.phone_nos}</p>                                             */}
             </div>
             </div>            
             <div className="two fields">
             <div className="field">
                 <label>Mobile No.</label>
-                <input type="text"  name="mobile_no"  autoComplete='off' maxLength={20} value={state.mobile_no || ""} onChange={handleChange} disabled={action} />
+                <input type="text"  name="mobile_no"  autoComplete='off' maxLength={20} value={state.mobile_no || ""} onChange={handleChange} readOnly={action} />
                 {/* <p className='error'>{formErrors.mobile_no}</p>                                             */}
             </div>
 
 
             <div className="field">
                 <label>Current Status</label>
-                <select className="ui fluid dropdown className='form-control'" name="status_id" value={state.status_id || "0"} onChange={handleChange} disabled={action}>
+                <select className="ui fluid dropdown className='form-control'" name="status_id" value={state.status_id || "0"} onChange={handleChange} readOnly={action}>
                     <option value="0">---Select Current Status---</option>
                     {statusData.map((sts) => (
                     <option value={sts.id}>{sts.descr}</option>

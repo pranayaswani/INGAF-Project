@@ -5,7 +5,45 @@
 - nominations - delete - sometimes doesnt referesh below table 
 - nominations - reset details after address
 - nominations - validations
-- nominations - disable top details after first entry 
+- nominations - disable top details after first entry, for Designation drop-down or text box
+- design course - date validation 
+- Client Details updation
+- login - proper message at wrong login 
+
+- bill generation - increment bill number,
+- bill generation - last client doesnt get removed
+- rating by participants 
+- faculty master - topics and sub topics 
+- faculty allotment 
+- UTR updation 
+- payment reconciliation 
+- generate calendar (done)
+- expenditure entry 
+- signatory master 
+- help desk entry 
+- photo gallery 
+- certificate generate 
+- contact us  (dymanic)
+- client approve - view - go back button 
+- if edit controller description error : controller already exists
+- office universe - delete : doesn't show remaining data
+- signatories list then add new
+- faculties - multi select (example: masters->more Masters->multi fields form)
+- approve clients : view button is not showing client details, and after approval it is not disappearing
+
+PRIORITIES: 
+
+- faculty master - with topics 
+- allot faculties - session wise
+- approve calendar 
+- complete nominations 
+- approve / reject nominations  - in case of approve storing remarks..
+- bill generation 
+- signatories - upload signature pending 
+- signatories - list 
+
+
+
 
 
 

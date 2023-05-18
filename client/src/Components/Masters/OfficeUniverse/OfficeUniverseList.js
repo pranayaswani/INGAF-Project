@@ -2,18 +2,23 @@ import React, { useState, useEffect } from "react";
 import OfficeUniverse from "./OfficeUniverse";
 import {Link} from 'react-router-dom';
 import axios from "axios";
+import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from "react-toastify";
 import DataTable from "react-data-table-component";
 
 // react table pagination sorting filter link https://www.youtube.com/watch?v=rgY1oPNVgwU
 const OfficeUniverseList = () => {
+  const {EntityID}=useSelector((state)=>state.user.userDetails);
+  const [tc_id, setTCID] = useState(EntityID)    
+
   const [tblData, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
 
-  const getData = async () => {
+  const getData = async (tc_id) => {
     try {
-      const response = await axios.get("http://localhost:5000/get/office_universe");
+     
+      const response = await axios.get(`http://localhost:5000/office_universe/tc/${tc_id}`);
       console.log(response);
       setData(response.data);
 
@@ -26,17 +31,18 @@ const OfficeUniverseList = () => {
   const deleteRecord = (id) =>{
     if(window.confirm("Are you  Sure?"))
     {
-    axios.delete(`http://localhost:5000/delete/office_universe/${id}`)
+    axios.delete(`http://localhost:5000/office_universe/${id}`)
     toast.success("Record Deleted Successfully...")    
     setTimeout(()=> getData(),500);}
   }
   const updateRecord = (id) =>{
     <Link to={`/OfficeUniverse/${id}`}></Link>
-    axios.get(`http://localhost:5000/get/office_universe/${id}`)
+    axios.get(`http://localhost:5000/office_universe/${id}`)
   }
 
   useEffect(() => {
-    getData();
+
+    getData(tc_id);
   }, []);
 
 

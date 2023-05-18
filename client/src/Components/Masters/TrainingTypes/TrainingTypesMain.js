@@ -140,7 +140,7 @@ const TrainingTypesMain = () => {
             <Header caption = "Training Types - Main"/>
             <div className="field">
                 <label>Training Type</label>
-                <input type="text" autoFocus  name="descr" autoComplete='off' maxLength={40} value={state.descr || ""} onChange={handleChange} disabled={action} />
+                <input type="text" autoFocus  name="descr" autoComplete='off' maxLength={40} value={state.descr || ""} onChange={handleChange} readOnly={action} />
             </div>
             <p className='error'>{formErrors.descr}</p>                            
 

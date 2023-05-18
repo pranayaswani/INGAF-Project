@@ -1,11 +1,11 @@
 import React,{useState, useEffect} from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import {Link, useParams} from 'react-router-dom';
 import Header from '../../CommonComponents/Header';
 import { toast, ToastContainer } from "react-toastify";
 
 const initialValues = {
-  tc_id:3,
   emp_name:"",  
   desig_id:"0",
   phone_nos:"",    
@@ -17,6 +17,10 @@ const initialValues = {
 }
 
 const OfficeUniverse = () => {
+    const {EntityID}=useSelector((state)=>state.user.userDetails);
+    const [tc_id, setTCID] = useState(EntityID)    
+    const [trainingCentre, setTrainingCentre]=useState("");    
+    
     const [statusData, setStatusData] = useState([]);
     const [designationData, setDesignationData] = useState([]);    
     const [roleData, setRoleData] = useState([]);        
@@ -25,14 +29,15 @@ const OfficeUniverse = () => {
     const [isSubmit, setIsSubmit]=useState(false);
     const [oldStatus, setOldStatus]=useState("");
 
-    const {tc_id, emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id} = state;
+
+    const {emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id} = state;
 
     const {action, id} = useParams();
      
     useEffect(()=>{
-      axios.get(`http://localhost:5000/getById/office_universe/${id}`)
+      axios.get(`http://localhost:5000/office_universe/${id}`)
         .then((response) => {
-          const {id, tc_id, emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id} = response.data[0];
+          const {id, emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id} = response.data[0];
           setOldStatus(status_id);
           setState({...response.data[0]})})
     },[id])
@@ -60,6 +65,15 @@ const OfficeUniverse = () => {
         .catch((err) => {
           console.log(err);
         });
+        axios.get(`http://localhost:5000/training_centres/${tc_id}`)
+        .then((response) => {
+          setTrainingCentre(response.data[0].descr);
+        })
+        .catch((err) => {
+          setTrainingCentre("INVALID Training Centre");
+        });
+
+
     }, []);
 
     const resetForm = () =>{
@@ -68,6 +82,8 @@ const OfficeUniverse = () => {
 
 
     const handleChange = (e) =>{
+      console.log("Target Name:",e.target.name)
+      console.log("Target Value:",e.target.value)      
         const {name, value}=e.target;
         setState({...state, [name]:value});
     }
@@ -82,7 +98,7 @@ const OfficeUniverse = () => {
         console.log(formErrors);
         if(Object.keys(formErrors).length===0 && isSubmit)
         {
-          const {tc_id, emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id} = state;
+          const {emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id} = state;
           if((id && oldStatus != status_id))
           {
               axios.put(`http://localhost:5000/updateStatus/office_universe/${id}`,{
@@ -100,7 +116,7 @@ const OfficeUniverse = () => {
             }
             else
             {
-              axios.get(`http://localhost:5000/get/office_universe_check/${emp_name}/${id}`)
+              axios.get(`http://localhost:5000/office_universe_check/${emp_name}/${id}`)
               .then((res1)=>
               {
                 if(res1.data.length>0)
@@ -110,8 +126,8 @@ const OfficeUniverse = () => {
                 {
                   if(id)
                   {
-                    axios.put(`http://localhost:5000/update/office_universe/${id}`,
-                    {tc_id, emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id})
+                    axios.put(`http://localhost:5000/office_universe/${id}`,
+                    {emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id})
                     .then((res)=>
                     {
                       if(res.status==200)
@@ -123,7 +139,7 @@ const OfficeUniverse = () => {
                       });
                   }else
                   {
-                    axios.post("http://localhost:5000/post/office_universe",
+                    axios.post("http://localhost:5000/office_universe",
                     {tc_id, emp_name, desig_id, phone_nos, mobile_no, email_id, user_role_id, login_id, status_id})
                     .then((res)=>
                     {
@@ -171,7 +187,7 @@ const OfficeUniverse = () => {
           </div>
           <div className="field">
             <label>Training Centre</label>
-            <input type="text" name="training_centre" readOnly value="INGAF (HQ), New Delhi" />
+            <input type="text" name="training_centre" readOnly value={trainingCentre} />
           </div>
           <div className="two fields">
             <div className="field">
@@ -187,7 +203,7 @@ const OfficeUniverse = () => {
                 className="ui fluid dropdown" name="desig_id" value={state.desig_id} onChange={handleChange} readOnly={action} >
                 <option value="0">---Select Designation---</option>
                 {designationData.map((desig) => (
-                  <option value={desig.id}>{desig.description}</option>
+                  <option key={desig.id} value={desig.id}>{desig.description}</option>
                 ))}
                 ;
               </select>
@@ -219,7 +235,7 @@ const OfficeUniverse = () => {
               <select className="ui fluid dropdown" name="user_role_id" value={state.user_role_id} onChange={handleChange} readOnly={action}>
                 <option value="0">---Select Role---</option>
                 {roleData.map((role) => (
-                  <option value={role.id}>{role.role}</option>
+                  <option key={role.id} value={role.id}>{role.role}</option>
                 ))}
                 ;
               </select>
@@ -237,7 +253,7 @@ const OfficeUniverse = () => {
               <select className="ui fluid dropdown" name="status_id" value={state.status_id} onChange={handleChange} readOnly={action}>
                 <option value="0">---Select Current Status---</option>
                 {statusData.map((st) => (
-                  <option value={st.id}>{st.descr}</option>
+                  <option key={st.id} value={st.id}>{st.descr}</option>
                 ))}
                 ;
               </select>
@@ -245,13 +261,10 @@ const OfficeUniverse = () => {
             <p className="error">{formErrors.status_id}</p>
           </div>          
           <button className="ui button primary w-20" hidden={action? "hidden" : ""}>{id? "Update" : "Save"}</button>
-            {/* <input type="submit" className='btn btn-primary w-10' value={id? "Update" : "Save"}/> */}
             &nbsp;&nbsp;&nbsp;&nbsp;<button className="ui button red w-20" hidden={action? "hidden" : ""} disabled={id} onClick={resetForm}>Reset</button>
           <Link to ="/OfficeUniverseList">
-          {/* <button className="btn btn-success pull-right" onClick={()=>{navigate(-1)}}><span className="glyphicon glyphicon-triangle-left"></span>&nbsp;&nbsp;Go Back</button>                     */}
-          <button className="btn btn-success pull-right"><span className="glyphicon glyphicon-triangle-left"></span>&nbsp;&nbsp;Go Back</button>                              
+            <button className="btn btn-success pull-right"><span className="glyphicon glyphicon-triangle-left"></span>&nbsp;&nbsp;Go Back</button>                              
           </Link>          
-          {/* <a href="/OfficeUniverseList" className="btn btn-success btn-lg pull-right"><span className="glyphicon glyphicon-triangle-left"></span>&nbsp;&nbsp;Go Back</a>                     */}
         </div>
       </form>
     </div>

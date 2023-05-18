@@ -167,7 +167,7 @@ const TopicsSub = () => {
 
             <div className="field">
                 <label>Sub Topic</label>
-                <input type="text" autoFocus  name="descr" autoComplete='off' maxLength={40} value={state.descr || ""} onChange={handleChange} disabled={action} />
+                <input type="text" autoFocus  name="descr" autoComplete='off' maxLength={40} value={state.descr || ""} onChange={handleChange} readOnly={action} />
             </div>
             <p className='error'>{formErrors.descr}</p>                            
 

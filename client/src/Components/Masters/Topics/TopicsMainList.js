@@ -30,57 +30,19 @@ const TopicsMainList = () => {
   const deleteRecord =  (id) => {
     if(window.confirm("Are you  Sure?"))
     {
-      // try {
-
-
-          axios.delete(`http://localhost:5000/delete/${apiName}/${id}`)
-          .then((res)=>{
-            if(res.status==200)
-            {
-              toast.success("Record Deleted Successfully...");
-              setTimeout(()=> getData(),300);                          
-            }
-          }).catch((err)=>{
-            toast.error("In Use. Can't Delete...!");
-          });
-
-
-
-
-      //   axios.delete(`http://localhost:5000/delete/${apiName}/${id}`)
-      //   .then((res)=>{
-      //     if(res.status==200)
-      //     {
-      //       toast.success("Record Deleted Successfully...");
-      //       setTimeout(()=> getData(),500);            
-      //     }
-      //   }).catch((err)=>{
-      //     toast.error("Some isssue...");
-      //   });
-      // }
-
-
-        // console.log("delete resp..."+response);
-        // toast.success("Record Deleted Successfully...");    
-
+      axios.delete(`http://localhost:5000/delete/${apiName}/${id}`)
+      .then((res)=>{
+        if(res.status==200)
+        {
+          toast.success("Record Deleted Successfully...");
+          setTimeout(()=> getData(),300);                          
+        }
+      }).catch((err)=>{
+        toast.error("In Use. Can't Delete...!");
+      });
   }
 };
-
-  // const deleteRecord = (id) =>{
-  //   if(window.confirm("Are you  Sure?"))
-  //   {
-  //     try{
-  //       axios.delete(`http://localhost:5000/delete/${apiName}/${id}`);
-  //       console.log()
-  //       toast.success("Record Deleted Successfully...");    
-  //       setTimeout(()=> getData(),500);
-  //     } catch(error){
-  //       toast.error("Error in Deletion...");    
-  //       setTimeout(()=> getData(),500);
-  //     }
-
-  //   } 
-  // }
+  
   const updateRecord = (id) =>{
     <Link to={`{componentRoute}/${id}`}></Link>
     axios.get(`http://localhost:5000/get/${apiName}/${id}`)

@@ -32,15 +32,15 @@ const ClientsRegistration = () => {
     const {controller_id,client_descr,pao_code,client_address,state_id,tc_id,contact_person,email_id,phone_nos,mobile_no,login_id,status_id} = state;
 
     const {action, id} = useParams();
-    console.log("view id: "+id)
+    // console.log("view id: "+id)
      
-    useEffect(()=>{
-      axios.get(`http://localhost:5000/getById/clients/${id}`)
-        .then((response) => {
-          const {id,controller_id,client_descr,pao_code,client_address,state_id,tc_id,contact_person,email_id,phone_nos,mobile_no,login_id,status_id} = response.data[0];
-          setOldStatus(status_id);
-          setState({...response.data[0]})})
-    },[id])
+    // useEffect(()=>{
+    //   axios.get(`http://localhost:5000/clients/${id}`)
+    //     .then((response) => {
+    //       const {id,controller_id,client_descr,pao_code,client_address,state_id,tc_id,contact_person,email_id,phone_nos,mobile_no,login_id,status_id} = response.data[0];
+    //       setOldStatus(status_id);
+    //       setState({...response.data[0]})})
+    // },[id])
 
 //id,controller_id,client_descr,pao_code,client_address,state_id,tc_id,contact_person,email_id,phone_nos,mobile_no,login_id,status_id
 
@@ -59,7 +59,7 @@ const ClientsRegistration = () => {
         .then((response) => {setStateData(response.data);})
         .catch((err) => {console.log(err);});
 
-        axios.get("http://localhost:5000/get/training_centres")
+        axios.get("http://localhost:5000/training_centres")
         .then((response) => {setTcData(response.data);})
         .catch((err) => {console.log(err);});        
     }, []);
@@ -113,17 +113,18 @@ const ClientsRegistration = () => {
                 {
                   if(id)
                   {
-                    axios.put(`http://localhost:5000/update/clients/${id}`,
-                    {controller_id,client_descr,pao_code,client_address,state_id,tc_id,contact_person,email_id,phone_nos,mobile_no,login_id,status_id})
-                    .then((res)=>
-                    {
-                      if(res.status==200)
+                      axios.put(`http://localhost:5000/update/clients/${id}`,
+                      {controller_id,client_descr,pao_code,client_address,state_id,tc_id,contact_person,email_id,phone_nos,mobile_no,login_id,status_id})
+                      .then((res)=>
                       {
-                        toast.success("Record Updated Successfully...");
-                      }
-                      }).catch((err)=>{
-                        toast.error("Some isssue...");
-                      });
+                        if(res.status==200)
+                        {
+                          toast.success("Record Updated Successfully...");
+                        }
+                        }).catch((err)=>{
+                          toast.error("Some isssue...");
+                        });
+
                   }else
                   {
                     axios.post("http://localhost:5000/post/clients",
@@ -176,7 +177,7 @@ const ClientsRegistration = () => {
                 ))}
                 ;
               </select>
-              <small>Select <b>[Others - 999]</b> as Ministry / Department for Non-Central Government Offices</small>
+              <small>Select <b><span style={{color:"red"}}>[Others - 999]</span></b> as Ministry / Department for Non-Central Government Offices</small>
               <p className="error">{formErrors.controller_id}</p>              
             </div>
             <div className="field">
@@ -252,21 +253,19 @@ const ClientsRegistration = () => {
                 <option value="0">---Select Current Status---</option>
                 {statusData.map((st) => (
                   <option value={st.id}>{st.descr}</option>
-                ))}
-                ;
+                ))};
               </select>
               <p className="error">{formErrors.status_id}</p>              
             </div>
-
           </div>          
-          <button className="ui button primary w-20" hidden={action? "hidden" : ""}>{id? "Update" : "Save"}</button>
-            {/* <input type="submit" className='btn btn-primary w-10' value={id? "Update" : "Save"}/> */}
+          <button className="ui button primary w-20" hidden={action? "hidden" : ""}>{id? "Update" : "Submit"}</button>
             &nbsp;&nbsp;&nbsp;&nbsp;<button className="ui button red w-20" hidden={action? "hidden" : ""} disabled={id} onClick={resetForm}>Reset</button>
-          <Link to ="/ClientsList">
-          {/* <button className="btn btn-success pull-right" onClick={()=>{navigate(-1)}}><span className="glyphicon glyphicon-triangle-left"></span>&nbsp;&nbsp;Go Back</button>                     */}
+{/* 
+          <button className="ui button primary w-20" hidden={action==="view"? "hidden" : ""}>{!id? "Save" : action==="Approve" ? "Approve" : "Update"}</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;<button className="ui button red w-20" hidden={action==="Approve" || !id ? "": "hidden" } disabled={id && action==="view" } onClick={resetForm}>{action==="Approve"?"Reject":"Reset"}</button> */}
+          {/* <Link to ="/ClientsList">
           <button className="btn btn-success pull-right"><span className="glyphicon glyphicon-triangle-left"></span>&nbsp;&nbsp;Go Back</button>                              
-          </Link>          
-          {/* <a href="/OfficeUniverseList" className="btn btn-success btn-lg pull-right"><span className="glyphicon glyphicon-triangle-left"></span>&nbsp;&nbsp;Go Back</a>                     */}
+          </Link>           */}
         </div>
       </form>
     </div>

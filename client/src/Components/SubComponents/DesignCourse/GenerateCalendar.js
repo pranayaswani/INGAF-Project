@@ -7,11 +7,12 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import DataTable from "react-data-table-component";
 import { convertDate } from '../../../Utils/Utils';
+import { useSelector } from 'react-redux';
 
 
 const initialValues = {
-    dateFrom:new Date(),    
-    dateUpto:new Date(),      
+    dateFrom:new Date(2023,1,1),    
+    dateUpto:new Date(2023,4,1),      
   }
 
 
@@ -20,6 +21,10 @@ const GenerateCalendar = () => {
   const [tblData, setData] = useState([]);
   const [state, setState] = useState(initialValues);      
   const [selectedData, setSelectedData] = useState([]);  
+  const [toggleCleared, setToggleCleared] = useState(true);
+  const {EntityID}=useSelector((state)=>state.user.userDetails);
+  const [tc_id, setTCID] = useState(EntityID)    
+  const [trainingCentre, setTrainingCentre]=useState("");    
 
   const {dateFrom, dateUpto} = state;
 
@@ -30,18 +35,41 @@ const GenerateCalendar = () => {
 // link selected rows: https://stackoverflow.com/questions/67983059/react-data-table-component-access-the-selected-row-and-assign-it-to-setstate
   const handleChangeSelectedRows = (state) =>{
     setSelectedData(state.selectedRows);
-    console.log(selectedData);
+    // console.log("selectd courses: ",selectedData);
   }
 
+  const updateCalendar = () =>{
+    console.log("selectd courses: ",selectedData);
+    var course_ids=0;
+    course_ids=selectedData.map((sel)=>{
+      return sel.id;
+    })
+    console.log("selected IDs: ",course_ids);
+    axios.put("http://localhost:5000/calendar",
+    {course_ids})
+    .then((res)=>
+    {
+      const response = axios.get(`http://localhost:5000/get/courses/${dateFrom}/${dateUpto}`);
+      // console.log(response);
+      setData(response.data);
+        setToggleCleared(!toggleCleared);
+        toast.success("Calendar Generated...");
+      }
+    ).catch((err)=>
+    {
+        toast.error("Some isssue in Saving...");
+    }); 
+  }
 
   const handleSubmit =  async (e) => {
     e.preventDefault();
+    console.log("fr",dateFrom)
+    console.log("to",dateUpto)    
     try {
-      console.log("date1:"+dateFrom)
-      console.log("date1:"+dateUpto)      
-      const response = await axios.get(`http://localhost:5000/get/courses/${dateFrom}/${dateUpto}`);
-      console.log(response);
+      const response = await axios.get(`http://localhost:5000/get/courses4/${tc_id}/${dateFrom}/${dateUpto}`);
+      // console.log(response);
       setData(response.data);
+      console.log("data:",tblData)
     } catch (error) {
       console.log(error);
     }
@@ -54,9 +82,15 @@ const GenerateCalendar = () => {
 
 
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+ useEffect(() => {
+    axios.get(`http://localhost:5000/training_centres/${tc_id}`)
+    .then((response) => {
+      setTrainingCentre(response.data[0].descr);
+    })
+    .catch((err) => {
+      setTrainingCentre("INVALID Training Centre");
+    });
+ }, []);
 
 
   // useEffect(() => {
@@ -75,6 +109,13 @@ const GenerateCalendar = () => {
       disableSortBy: true,
       width:"70px"
     },
+    // {
+    //   name: 'ID',
+    //   selector: (row, index) => row.id,
+    //   disableSortBy: true,
+    //   width:"70px"
+    // },
+
     {
         name: <b>Training Type</b>,
         selector: (row) => row.training_type,
@@ -141,9 +182,9 @@ const GenerateCalendar = () => {
 
             <Form.Group widths='equal'>            
             <div className="field">
-              <label>Training Centre</label>
-              <input type="text" name="tc_id" readOnly value="INGAF (HQ), New Delhi" />
-            </div>
+            <label>Training Centre</label>
+            <input type="text" name="tc_id" readOnly value={trainingCentre} />
+          </div>
          
                 <div className="field">
                     <label>Period From</label>
@@ -166,6 +207,7 @@ const GenerateCalendar = () => {
       fixedHeader
       fixedHeaderScrollHeight="450px"
       selectableRows
+      clearSelectedRows={toggleCleared}
       onSelectedRowsChange={handleChangeSelectedRows}
       selectableRowsHighlight
       highlightOnHover
@@ -174,7 +216,7 @@ const GenerateCalendar = () => {
 
       pagination
     />
-    <button className="btn btn-primary ">Generate Calendar</button>                              
+    <button className="btn btn-primary" onClick={updateCalendar}>Generate Calendar</button>                              
     <button className="btn btn-primary pull-right ">Submit For Approval</button>                              
     </div>
   );

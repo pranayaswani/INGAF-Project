@@ -5,16 +5,25 @@ import {Link, useParams} from 'react-router-dom';
 import Header from "../../CommonComponents/Header"
 import { toast, ToastContainer } from "react-toastify";
 import { Form } from 'semantic-ui-react'
-import { convertDate } from '../../../Utils/Utils';
+import { convertDate, reverseDateAsString } from '../../../Utils/Utils';
 import DataTable from "react-data-table-component";
+import { useSelector } from 'react-redux';
+
+const cDate = reverseDateAsString(convertDate(new Date()));
 
 const initialValues = {
-    client_id:"0",  
-    tc_id:"3",
-    course_id:"",
+    // client_id:"0",  
+    nomination_id:"",
   }
 
   const NominationsApproval = () => {
+
+    const {EntityID}=useSelector((state)=>state.user.userDetails);
+    const [tcID, setTCID] = useState(EntityID)    
+    const [trainingCentre, setTrainingCentre]=useState("");    
+    const [remarks, setRemarks]=useState("");        
+    console.log("TCID:",tcID)
+  
     const [ttMainData, setTTMainData] = useState([]);
     const [ttSubData, setTTSubData] = useState([]);    
     const [mainTopicsData, setMainTopicsData] = useState([]);    
@@ -28,8 +37,11 @@ const initialValues = {
     const [trainingType, setTrainingType]=useState("0");    
     const [main_topic_id, setTopic]=useState("0");        
     const [courseID, setCourseID]=useState("0");            
+    const [clientID, setClientID]=useState("0");                
     const [tcData, setTcData] = useState([]);                
-    const [nominationData, setNominationData] = useState([]);                        
+    const [nominationData, setNominationData] = useState([]); 
+    const [selectedData, setSelectedData] = useState([]);                             
+    const [toggleCleared, setToggleCleared] = useState(true);
 
     const {client_id,course_id,tc_id,p_name,desig_id,email_id,mobile_no} = state;  
 
@@ -60,48 +72,130 @@ const initialValues = {
     },[client_id])
 
 const getNominationData = (course_id, client_id)=>{
-  axios.get(`http://localhost:5000/get/nominations/${course_id}/${client_id}`)
+  axios.get(`http://localhost:5000/nominations/${course_id}/${client_id}`)
   .then((response) => {setNominationData(response.data);})
   .catch((err) => {console.log(err);});        
 }
+
+const handleChangeSelectedRows = (state) =>{
+  setSelectedData(state.selectedRows);
+  // console.log("selectd courses: ",selectedData);
+}
+
 
 const handleChange = (e) =>{
     const {name, value}=e.target;
     setState({...state, [name]:value});
     if(e.target.name === "tt_sub_id")
     {
-      axios.get(`http://localhost:5000/get/courses/${e.target.value}`)
+      console.log("coming to select course data..")
+      axios.get(`http://localhost:5000/get/courses/${tcID}/${e.target.value}`)
       .then((response) => {
         setCourseData(response.data);
-        const d1 = response.data[0].date_from;
-        const d1date = new Date(d1);
+        console.log("CD:",courseData)
+        // const d1 = response.data[0].date_from;
+        // const d1date = new Date(d1);
       })
       .catch((err) => {
         console.log(err);
       });
     }else 
-    if(e.target.name === "main_topic_id")
+    if(e.target.name === "course_id")
     {
       const course_id = e.target.value;
       setCourseID(course_id);
-      axios.get(`http://localhost:5000/get/courses2/${course_id}`) 
+      console.log("CourseID:",course_id)
+      axios.get(`http://localhost:5000/get/clientsNom/${course_id}`) 
       .then((response) => {
-        const main_id = response.data[0].main_topic_id;
-        setTopic(main_id);
-        const dt1 = response.data[0].date_from;
-        const dt1date = new Date(dt1);
-        const dt2 = response.data[0].date_upto;
-        const dt2date = new Date(dt2);
+        //const main_id = response.data[0].main_topic_id;
+        setClientsData(response.data);
+        // const dt1 = response.data[0].date_from;
+        // const dt1date = new Date(dt1);
+        // const dt2 = response.data[0].date_upto;
+        // const dt2date = new Date(dt2);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }else if(e.target.name === "client_id")
+    {
+      const client_id = e.target.value;
+      setClientID(13);
+      console.clear();
+      console.log("ClientID:",clientID)
+      //axios.get(`http://localhost:5000/nominations/${courseID}/${clientID}`) 
+      console.log("coming here...")
+      axios.get(`http://localhost:5000/nominations/183/13`)       
+      .then((response) => {
+        //const main_id = response.data[0].main_topic_id;
+        setNominationData(response.data);
+        console.log("Nom:",nominationData)
+        // const dt1 = response.data[0].date_from;
+        // const dt1date = new Date(dt1);
+        // const dt2 = response.data[0].date_upto;
+        // const dt2date = new Date(dt2);
       })
       .catch((err) => {
         console.log(err);
       });
     }
+
+
 }
 
 const handleReject = () => {
+  console.log("selected nominations: ",selectedData);
+  var nomination_ids=0;
+  nomination_ids=selectedData.map((sel)=>{
+    return sel.id;
+  })
+  console.log("selected IDs: ",nomination_ids);
+  const action='R';
+  console.log("Remarks:",remarks)
+  axios.put(`http://localhost:5000/nominations/${action}`,
+  {nomination_ids,remarks})
+  .then((res)=>
+  {
+    // const response = axios.get(`http://localhost:5000/nominations/${dateFrom}/${dateUpto}`);
+    // // console.log(response);
+    // setData(response.data);
+      setToggleCleared(!toggleCleared);
+      toast.success("Nominations Rejected...");
+    }
+  ).catch((err)=>
+  {
+      toast.error("Some isssue in Rejection...");
+  }); 
+
+  
 
 }
+const handleApprove = () => {
+  console.log("selected nominations: ",selectedData);
+  var nomination_ids=0;
+  nomination_ids=selectedData.map((sel)=>{
+    return sel.id;
+  })
+  console.log("selected IDs: ",nomination_ids);
+  const action='Y';
+  setRemarks('');
+  axios.put(`http://localhost:5000/nominations/${action}`,
+  {nomination_ids,remarks})
+  .then((res)=>
+  {
+    // const response = axios.get(`http://localhost:5000/nominations/${dateFrom}/${dateUpto}`);
+    // // console.log(response);
+    // setData(response.data);
+      setToggleCleared(!toggleCleared);
+      toast.success("Nominations Approved...");
+    }
+  ).catch((err)=>
+  {
+      toast.error("Some isssue in Approval...");
+  }); 
+
+}
+
 
  const handleSubmit = (e) =>{
 //     e.preventDefault();
@@ -183,7 +277,7 @@ const columns = [
                         className="ui fluid dropdown" name="course_id" value={state.course_id} onChange={handleChange} readOnly={action} >
                         <option value="0">---Select Topic---</option>
                         {courseData.map((mtp) => (
-                        <option value={mtp.course_id}>{mtp.topic} ( {convertDate(new Date(mtp.date_from))} to {convertDate(new Date(mtp.date_upto))} )</option>                                                 
+                        <option value={mtp.id}>{mtp.main_topic} ( {convertDate(new Date(mtp.date_from))} to {convertDate(new Date(mtp.date_upto))} )</option>                                                 
                         ))};
                     </select>
 
@@ -210,6 +304,8 @@ const columns = [
       fixedHeader
       fixedHeaderScrollHeight="450px"
       selectableRows
+      clearSelectedRows={toggleCleared}
+      onSelectedRowsChange={handleChangeSelectedRows}      
       selectableRowsHighlight
       highlightOnHover
       //  actions={<button className="btn btn-sm btn-primary">Export</button>}
@@ -242,9 +338,9 @@ const columns = [
 
         </form>    
          <br/>
-          <button className="ui button primary w-20" hidden={action? "hidden" : ""}>Approve</button>
+          <button className="ui button primary w-20" hidden={action? "hidden" : ""} onClick={handleApprove}>Approve</button>
             &nbsp;&nbsp;&nbsp;&nbsp;<button className="ui button red w-20" hidden={action? "hidden" : ""} disabled={id} onClick={handleReject}>Reject</button>
-            &nbsp;&nbsp;&nbsp;&nbsp;Rejection Reasons: <input type="text" placeholder='Enter Rejections Reasons...'/>
+            &nbsp;&nbsp;&nbsp;&nbsp;Rejection Reasons: <input type="text" name='remarks' value={remarks} placeholder='Enter Rejections Reasons...' onChange={(e)=>setRemarks(e.target.value)} />
             &nbsp;&nbsp;<button className="btn btn-success pull-right">Submit</button>                              
     </div>
   );

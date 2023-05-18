@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link, useParams} from 'react-router-dom';
-//import Header from "../../CommonComponents/Header"
+import { useSelector } from 'react-redux';
 import Header from "../../CommonComponents/Header"
 import { toast, ToastContainer } from "react-toastify";
 import { Form } from 'semantic-ui-react'
@@ -10,7 +10,6 @@ import { convertDate } from '../../../Utils/Utils';
 
 const dt = new Date();
 const initialValues = {
-    tc_id:"3",
     course_id:"",
   }
 
@@ -18,6 +17,10 @@ const initialValues = {
 
 
 const SessionWisePlan = () => {
+  const {EntityID}=useSelector((state)=>state.user.userDetails);
+  const [tc_id, setTCID] = useState(EntityID)    
+  const [trainingCentre, setTrainingCentre]=useState("");    
+
     const [ttMainData, setTTMainData] = useState([]);
     const [ttSubData, setTTSubData] = useState([]);    
     const [mainTopicsData, setMainTopicsData] = useState([]);    
@@ -35,7 +38,7 @@ const SessionWisePlan = () => {
     const [dateUpto, setDateUpto]=useState("");                
     // const [dates, setDates]=useState(["2022-12-21","2022-12-22","2022-12-23","2022-12-24","2022-12-25"]);            
     
-    const {tc_id,tt_sub_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id,status_id} = state;
+    const {tt_sub_id,mode_of_training,date_from,date_upto,last_date,course_fee,course_director_id,course_coordinator_id,status_id} = state;
 
     const {action, id} = useParams();
 // useEffect(()=>{
@@ -71,6 +74,13 @@ useEffect(() => {
       console.log(err);
     });
 
+    axios.get(`http://localhost:5000/training_centres/${tc_id}`)
+    .then((response) => {
+      setTrainingCentre(response.data[0].descr);
+    })
+    .catch((err) => {
+      setTrainingCentre("INVALID Training Centre");
+    });
 
     // axios.get("http://localhost:5000/get/courses")
     // .then((response) => {
@@ -92,7 +102,8 @@ const handleChange = (e) =>{
     setState({...state, [name]:value});
     if(e.target.name === "tt_sub_id")
     {
-      axios.get(`http://localhost:5000/get/courses/${e.target.value}`)
+      console.log("tcid:",tc_id)
+      axios.get(`http://localhost:5000/get/courses/${tc_id}/${e.target.value}`)
       .then((response) => {
         setCourseData(response.data);
         const d1 = response.data[0].date_from;
@@ -111,6 +122,7 @@ const handleChange = (e) =>{
     {
       const course_id = e.target.value;
       setCourseID(course_id);
+      console.log("CourseID:",course_id)
       axios.get(`http://localhost:5000/get/courses2/${course_id}`) 
       .then((response) => {
         // console.log("Response data:"+JSON.stringify(response.data[0]));   
@@ -124,10 +136,10 @@ const handleChange = (e) =>{
         while(dt1date <= dt2date)
         {
           course_period.push(convertDate(dt1date))
-          //course_period.push(dt1date.getFullYear() + "-" + dt1date.getMonth() + "-" +dt1date.getDate())
           dt1date.setDate(dt1date.getDate()+1)
         }
        setCoursePeriod(course_period);
+       console.log("Generated Course Prd:",course_period)
       })
       .catch((err) => {
         console.log(err);
@@ -215,7 +227,7 @@ const handleSubmit = (e) =>{
           <Header caption="Session Wise Plan"/>
           <div className="field">
             <label>Training Centre</label>
-            <input type="text" name="tc_id" readOnly value="INGAF (HQ), New Delhi" />
+            <input type="text" name="training_centre" readOnly value={trainingCentre} />
           </div>
           <Form.Group widths='equal'>
             <div className="field">
@@ -238,7 +250,7 @@ const handleSubmit = (e) =>{
                           // const dtfr = convertDate(courseData.date_from);
                          //<option value={mtp.course_id}>{mtp.topic} ( {mtp.date_from.toString().substring(0,10)} to {mtp.date_upto.toString().substring(0,10)} )</option>
                         //<option value={mtp.course_id}>{mtp.topic} ( {dateFrom} to {dateUpto} )</option>                         
-                        <option value={mtp.course_id}>{mtp.topic} ( {convertDate(new Date(mtp.date_from))} to {convertDate(new Date(mtp.date_upto))} )</option>                                                 
+                        <option value={mtp.id}>{mtp.main_topic} ( {convertDate(new Date(mtp.date_from))} to {convertDate(new Date(mtp.date_upto))} )</option>                                                 
                         //  <option value={mtp.course_id}>{mtp.topic} ( {mtp.convertDate(date_from.toString().substring(0,10))} to {mtp.convertDate(date_upto.toString().substring(0,10))} )</option>                        
                         ))}
                         ;
@@ -283,9 +295,7 @@ const handleSubmit = (e) =>{
 
           {coursePeriod.map((dt) => (
             <DateWiseSessions courseID = {courseID} cDate={dt} mainTopic={main_topic_id}/>          
-            // <DateWiseSessions cDate={dt}/>                      
-                ))}
-                ;
+                ))};
         </div>      
         </form>    
                 {/* <button className="ui button primary w-20">Enter Session Wise Plan</button>           */}

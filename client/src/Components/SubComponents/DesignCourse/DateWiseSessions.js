@@ -25,7 +25,8 @@ const DateWiseSessions = (props) => {
   
     const [subTopicsData, setSubTopicsData] = useState([]);
     useEffect(() => {
-       axios.get(`http://localhost:5000/get/topics_sub/${props.mainTopic}`)
+      console.log("MT:",props.mainTopic)
+       axios.get(`http://localhost:5000/get/sub_topics/${props.mainTopic}`)
         .then((response) => {
           setSubTopicsData(response.data);
         })

@@ -8,11 +8,22 @@ import "./ClientOfficeRegistration.css";
 const ClientOfficeRegistration = () => {
 
   const schema = yup.object().shape({
-    controller_code: yup.string().required(),
-    office_name: yup.string().required("Office Name is Required!").max(60,"Maximum 60 characters are allowed!").min(10,"Minimum 10 characters are required!"),
-    address: yup.string().required("Address is required!"),
-    email_id: yup.string().email().required("E-Mail ID is required!"),    
-    pao_code: yup.string().max(6,"Should be of 6 Characters!").min(6,"Should be of 6 Characters!"),
+    controller_code: yup.string()
+    .required("Controller Code is Required")
+    .min(3,"Should be 3 Characters")
+    .max(3,"Should be 3 Characters"),
+    office_name: yup.string()
+    .required("Office Name is Required!")
+    .max(60,"Maximum 60 characters are allowed!")
+    .min(10,"Minimum 10 characters are required!"),
+    address: yup.string()
+    .required("Address is required!"),
+    email_id: yup.string()
+    .email("Not a Valid Email ID!")
+    .required("E-Mail ID is required!"),    
+    pao_code: yup.string()
+    .max(6,"Should be of 6 Characters!")
+    .min(6,"Should be of 6 Characters!"),
   });
 
   const {register, handleSubmit, formState: {errors}} = useForm({
@@ -37,7 +48,7 @@ const ClientOfficeRegistration = () => {
   
   const handlSubmit = (e) =>{  
     e.preventDefault();
-    console.log("controller:",controller_code);
+
     axios.post("http://localhost:5000/post/clients",{
       controller_code, office_name,
       // controller_code,office_name,address,state_code,pao_code,contact_person,email_id,phone_nos, mobile_no, nearest_tc,

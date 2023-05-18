@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Link, useParams} from 'react-router-dom';
 import Header from '../../CommonComponents/Header';
 import { toast, ToastContainer } from "react-toastify";
+import ToastMessage from '../../CommonComponents/ToastMessage';
 
 const initialValues = {
   descr:"",
@@ -134,13 +135,13 @@ const Designations = () => {
     // };
   return (
     <div className="ui container mt-2">
-        <ToastContainer position='top-center'/>
+        <ToastMessage/>
     <form className='ui form' onSubmit={handleSubmit}> 
         <div className="ui segment">
             <Header caption = "Designations"/>
             <div className="field">
                 <label>Designation</label>
-                <input type="text" autoFocus  name="descr" autoComplete='off' maxLength={20} value={state.descr || ""} onChange={handleChange} disabled={action} />
+                <input type="text" autoFocus  name="descr" autoComplete='off' maxLength={20} value={state.descr || ""} onChange={handleChange} readOnly={action} />
             </div>
             <p className='error'>{formErrors.descr}</p>                            
 

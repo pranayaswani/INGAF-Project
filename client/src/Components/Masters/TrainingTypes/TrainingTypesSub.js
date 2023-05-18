@@ -90,7 +90,7 @@ const TrainingTypesSub = () => {
             }
             else
             {
-              axios.get(`http://localhost:5000/get/training_types_sub_check/${descr}`)
+              axios.get(`http://localhost:5000/get/training_types_sub_check/${tt_main_id}/${descr}`)
                         .then((res1)=>{
                         if(res1.data.length>0)
                         {
@@ -163,7 +163,7 @@ const TrainingTypesSub = () => {
 
             <div className="field">
                 <label>Training Type</label>
-                <input type="text" autoFocus  name="descr" autoComplete='off' maxLength={40} value={state.descr || ""} onChange={handleChange} disabled={action} />
+                <input type="text" autoFocus  name="descr" autoComplete='off' maxLength={40} value={state.descr || ""} onChange={handleChange} readOnly={action} />
             </div>
             <p className='error'>{formErrors.descr}</p>                            
 

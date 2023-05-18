@@ -24,3 +24,9 @@ th{
 .ui.horizontal.divider {
   line-height: 1.5;
 }
+
+.home_img{
+  width: 100%;
+    height: auto;
+    max-width: 100%;
+}

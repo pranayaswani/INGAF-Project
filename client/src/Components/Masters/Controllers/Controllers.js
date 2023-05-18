@@ -150,13 +150,13 @@ const Controllers = () => {
             <Header caption = "Controllers"/>
             <div className="field">
                 <label>Controller Code</label>
-                <input type="text"  name="controller_code" autoComplete='off' maxLength={3} value={state.controller_code || ""} onChange={handleChange} disabled={action} />
+                <input type="text"  name="controller_code" autoComplete='off' maxLength={3} value={state.controller_code || ""} onChange={handleChange} readOnly={action} />
             </div>
             <p className='error'>{formErrors.controller_code}</p>                                        
 
             <div className="field">
                 <label>Controller Description</label>
-                <input type="text"  name="descr" autoComplete='off' maxLength={100} value={state.descr || ""} onChange={handleChange} disabled={action} />
+                <input type="text"  name="descr" autoComplete='off' maxLength={100} value={state.descr || ""} onChange={handleChange} readOnly={action} />
             </div>
             <p className='error'>{formErrors.descr}</p>                            
 

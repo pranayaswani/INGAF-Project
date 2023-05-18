@@ -96,7 +96,8 @@ const DesignationsList = () => {
 
   return (
     <div>
-              <ToastContainer position='top-center'/>
+      <div>
+              <ToastContainer position='top-center'/></div>
     
     <DataTable
       title="Designations List"

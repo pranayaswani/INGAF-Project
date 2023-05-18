@@ -5,3 +5,10 @@
     background-color: #fff;
 
 }
+
+i {
+    padding-right: 10px !important;
+}
+span{
+    padding: 10px;
+}

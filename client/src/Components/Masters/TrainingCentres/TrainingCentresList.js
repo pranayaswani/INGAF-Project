@@ -7,13 +7,14 @@ import DataTable from "react-data-table-component";
 
 // react table pagination sorting filter link https://www.youtube.com/watch?v=rgY1oPNVgwU
 const TrainingCentresList = () => {
+  const apiName = "training_centres";
   const [tblData, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
 
   const getData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/get/training_centres");
+      const response = await axios.get("http://localhost:5000/training_centres");
       console.log(response);
       setData(response.data);
 
@@ -23,13 +24,21 @@ const TrainingCentresList = () => {
     }
   };
 
-  const deleteRecord = (id) =>{
+  const deleteRecord =  (id) => {
     if(window.confirm("Are you  Sure?"))
     {
-    axios.delete(`http://localhost:5000/delete/training_centres/${id}`)
-    toast.success("Record Deleted Successfully...")    
-    setTimeout(()=> getData(),500);}
+      axios.delete(`http://localhost:5000/${apiName}/${id}`)
+      .then((res)=>{
+        if(res.status==200)
+        {
+          toast.success("Record Deleted Successfully...");
+          setTimeout(()=> getData(),300);                          
+        }
+      }).catch((err)=>{
+        toast.error("In Use. Can't Delete...!");
+      });
   }
+};
   const updateRecord = (id) =>{
     <Link to={`/TrainingCentres/${id}`}></Link>
     axios.get(`http://localhost:5000/get/training_centres/${id}`)

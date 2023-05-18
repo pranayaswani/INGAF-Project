@@ -1,16 +1,20 @@
 import React,{useState, useEffect} from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import {Link, useParams} from 'react-router-dom';
 //import Header from "../../CommonComponents/Header"
 import Header from "../../CommonComponents/Header"
 import { toast, ToastContainer } from "react-toastify";
 import { Form } from 'semantic-ui-react'
-import { convertDate } from '../../../Utils/Utils';
 import DataTable from "react-data-table-component";
+import { convertDate, reverseDateAsString } from '../../../Utils/Utils';
+
+
+const cDate = reverseDateAsString(convertDate(new Date()));
+
 
 const initialValues = {
-    client_id:"6",  
-    tc_id:"3",
+    // tc_id:"0",
     course_id:"",
     p_name:"",
     desig_id:"0",
@@ -25,10 +29,14 @@ const initialValues = {
     mobile_no:"",
   }
 
-  
+
 
   const Nominations = () => {
-    const [ttMainData, setTTMainData] = useState([]);
+    const {EntityID}=useSelector((state)=>state.user.userDetails);
+    const [client_id, setClientID] = useState(EntityID)
+    const [tc_id, setTCID] = useState("")    
+    const [tt_sub_id, setTTID] = useState("")        
+    const [coursesData, setCoursesData] = useState([]);
     const [ttSubData, setTTSubData] = useState([]);    
     const [mainTopicsData, setMainTopicsData] = useState([]);    
     const [subTopicsData, setSubTopicsData] = useState([]);        
@@ -43,39 +51,55 @@ const initialValues = {
     const [courseID, setCourseID]=useState("0");            
     const [tcData, setTcData] = useState([]);                
     const [designationData, setDesignationData] = useState([]);                    
-    const [nominationData, setNominationData] = useState([]);                        
-
-    const {client_id,course_id,tc_id,p_name,desig_id,email_id,mobile_no} = state;  
+    const [nominationData, setNominationData] = useState([]);     
+    
+    const {course_id,p_name,desig_id,email_id,mobile_no} = state;  
 
     const {action, id} = useParams();
 
     useEffect(() => {
-      axios.get("http://localhost:5000/get/training_types_sub")
-      .then((response) => {setTTSubData(response.data);})
-      .catch((err) => {console.log(err);});
-
-      axios.get("http://localhost:5000/get/topics_main")
-      .then((response) => {setMainTopicsData(response.data);})
-      .catch((err) => {console.log(err);});
-
       axios.get("http://localhost:5000/get/designations")
       .then((response) => {setDesignationData(response.data);})
       .catch((err) => {console.log(err);});
 
+      axios.get(`http://localhost:5000/get/training_types_sub`)
+      .then((response) => {setTTSubData(response.data);})
+      .catch((err) => {console.log(err);});
 
-      axios.get("http://localhost:5000/get/training_centres")
+
+      // axios.get(`http://localhost:5000/clients/${client_id}`)
+      // .then((response) => {setTCID(response.data[0].tc_id);
+      // console.log("tcid:",response.data[0].tc_id)
+      // })
+      // .catch((err) => {console.log(err);});
+
+      axios.get("http://localhost:5000/training_centres")
       .then((response) => {setTcData(response.data);})
-      .catch((err) => {console.log(err);});        
+      .catch((err) => {console.log(err);});
     }, []);
 
     useEffect(()=>{
-      console.log("useEf"+course_id)
       if(course_id>0)
         getNominationData(course_id, client_id);
     },[course_id])
 
-const getNominationData = (course_id, client_id)=>{
-  axios.get(`http://localhost:5000/get/nominations/${course_id}/${client_id}`)
+    // useEffect(()=>{
+    //   if(tc_id>0)
+    //   axios.get(`http://localhost:5000/current_courses/${tc_id}`)
+    //   .then((response) => {setCoursesData(response.data);})
+    //   .catch((err) => {console.log(err);});
+  
+    // },[tc_id])
+
+
+    // axios.get("http://localhost:5000/get/topics_main")
+    // .then((response) => {setMainTopicsData(response.data);})
+    // .catch((err) => {console.log(err);});
+
+
+
+    const getNominationData = (course_id, client_id)=>{
+  axios.get(`http://localhost:5000/nominations/${course_id}/${client_id}`)
   .then((response) => {setNominationData(response.data);})
   .catch((err) => {console.log(err);});        
 }
@@ -87,22 +111,42 @@ const resetForm = () =>{
 const deleteRecord = (id) =>{
     if(window.confirm("Are you  Sure?"))
     {
-      console.log("coming in delete..."+course_id)
+    console.log("coming in delete..."+course_id)
     axios.delete(`http://localhost:5000/delete/nominations/${id}`)
     getNominationData(course_id,client_id);
-                              //  delete('/delete/nominations/:id'
-//    toast.success("Record Deleted Successfully...")    
+    toast.success("Record Deleted Successfully...")    
     // setTimeout(()=> getData(),500);
-}
   }
+}
+
+const handleTC = (e) =>{
+  setTCID(e.target.value)
+}
+
+const handleTT = (e) =>{
+  console.log("TGT",e.target.value)  
+  setTTID(e.target.value)
+  console.log("TC:",tc_id) 
+  console.log("DT:",cDate)  
+  axios.get(`http://localhost:5000/get/courses/${tc_id}/${e.target.value}/${cDate}`)
+      .then((response) => {
+        setCourseData(response.data);
+        const d1 = response.data[0].date_from;
+        const d1date = new Date(d1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+}
 
 
 const handleChange = (e) =>{
     const {name, value}=e.target;
     setState({...state, [name]:value});
+    console.log(state)
     if(e.target.name === "tt_sub_id")
     {
-      axios.get(`http://localhost:5000/get/courses/${e.target.value}`)
+      axios.get(`http://localhost:5000/get/courses/${tc_id}/${e.target.value}`)
       .then((response) => {
         setCourseData(response.data);
         const d1 = response.data[0].date_from;
@@ -135,8 +179,9 @@ const handleSubmit = (e) =>{
     e.preventDefault();
     if(e.target.name==="btnAdd")
     {
-        const {client_id,tc_id,course_id,p_name,desig_id,email_id,mobile_no} = state;  
+        const {course_id,p_name,desig_id,email_id,mobile_no} = state;  
         console.log("Course ID:"+course_id)
+        console.log("Client ID:"+client_id)        
         axios.post("http://localhost:5000/post/nominations",
         {client_id,tc_id,course_id,p_name,desig_id,email_id,mobile_no})
         .then((res)=>
@@ -214,10 +259,11 @@ const columns = [
           <div className="field">
           <label>INGAF Training Centre</label>
                 <select 
-                    className="ui fluid dropdown" name="tc_id" value={state.tc_id} onChange={handleChange} readOnly={action} >
-                    <option value="0">---Select Nearest INGAF Training Centre---</option>
+                    // className="ui fluid dropdown" name="tc_id" value={tc_id} onChange={handleChange} readOnly={action} >
+                    className="ui fluid dropdown" name="tc_id" value={tc_id} onChange={handleTC}>                      
+                    <option value="0">---Select INGAF Training Centre---</option> 
                     {tcData.map((tc) => (
-                    <option value={tc.id}>{tc.description}</option>
+                    <option key={tc.id} value={tc.id}>{tc.description}</option>
                     ))};
                 </select>
                 <p className="error">{formErrors.tc_id}</p>                
@@ -226,10 +272,10 @@ const columns = [
             <div className="field">
               <label>Training Type</label>
               <select 
-                className="ui fluid dropdown" name="tt_sub_id" value={state.tt_sub_id} onChange={handleChange}>
+                className="ui fluid dropdown" name="tt_sub_id" value={tt_sub_id} onChange={handleTT}>
                 <option value="0">---Select Training Type---</option>
                 {ttSubData.map((tts) => (
-                  <option value={tts.id}>{tts.description}</option>
+                  <option key={tts.id} value={tts.id}>{tts.description}</option>
                 ))}
                 ;
               </select>
@@ -240,7 +286,7 @@ const columns = [
                         className="ui fluid dropdown" name="course_id" value={state.course_id} onChange={handleChange} readOnly={action} >
                         <option value="0">---Select Topic---</option>
                         {courseData.map((mtp) => (
-                        <option value={mtp.course_id}>{mtp.topic} ( {convertDate(new Date(mtp.date_from))} to {convertDate(new Date(mtp.date_upto))} )</option>                                                 
+                        <option key={mtp.course_id} value={mtp.course_id}>{mtp.topic} ( {convertDate(new Date(mtp.date_from))} to {convertDate(new Date(mtp.date_upto))} )</option>                                                 
                         ))};
                     </select>
 
@@ -261,7 +307,7 @@ const columns = [
                     className="ui fluid dropdown" name="desig_id" value={state.desig_id} onChange={handleChange}  >
                     <option value="0">---Select Designation---</option>
                     {designationData.map((dsg) => (
-                    <option value={dsg.id}>{dsg.description}</option>
+                    <option key={dsg.id} value={dsg.id}>{dsg.description}</option>
                     ))};
                 </select>
                 <p className="error">{formErrors.desig_id}</p>                
